@@ -10,6 +10,7 @@ public:
 	virtual ~Escena(){}
 	virtual void Actualizar(Juego &j) = 0;
 	virtual void Dibujar(RenderWindow &ventana) = 0;
+	virtual void ProcesarEventos(Juego &j, Event &e) = 0;
 private:
 };
 #endif

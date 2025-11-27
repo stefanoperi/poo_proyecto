@@ -25,11 +25,18 @@ void Juego::Jugar(){
 }
 
 void Juego::ProcesarEventos(){
-	Event e;
-	while(m_ventana.pollEvent(e)) {
-		if(e.type == Event::Closed){
+	sf::Event e;
+	
+	// Bucle de polling de SFML que obtiene todos los eventos ocurridos desde el último frame
+	while(m_ventana.pollEvent(e)) { 
+		
+		// El evento de cerrar ventana siempre se maneja en el objeto Juego
+		if(e.type == sf::Event::Closed){
 			m_ventana.close();	
 		}
+		
+		// DELEGACIÓN: Pasa el evento al método ProcesarEventos de la escena activa
+		m_escena->ProcesarEventos(*this, e); 
 	}
 }
 void Juego::Actualizar(){

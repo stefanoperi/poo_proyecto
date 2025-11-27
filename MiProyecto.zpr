@@ -14,6 +14,7 @@ tab_width=4
 tab_use_spaces=0
 explorer_path=.
 inherits_from=
+current_source=Personaje.h
 path_char=\
 [source]
 path=GestorRecursos.cpp
@@ -36,6 +37,7 @@ cursor=0:0
 [header]
 path=Personaje.h
 cursor=0:0
+open=true
 [other]
 path=Leeme.txt
 cursor=0:0

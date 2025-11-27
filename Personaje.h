@@ -1,26 +1,34 @@
 #ifndef PERSONAJE_H
 #define PERSONAJE_H
+
 #include <SFML/Graphics.hpp>
-class Personaje{
+// #include "GestorRecursos.h" // <-- A veces ayuda incluirlo aquí, o solo en el cpp
+
+class Personaje {
 protected:
 	sf::Sprite m_sprite;
-	sf::Texture m_textura;
-	float m_velocidad;
-	float m_velocidadsalto;
+	
+	// CAMBIO CLAVE: Antes era float, ahora es Vector2f (X e Y)
+	sf::Vector2f m_velocidad; 
+	
 	bool m_ensuelo;
-	const float GRAVEDAD = 0.5f; 
-	const float FUERZA_SALTO = -10.0f;// Negativo porque Y aumenta hacia abajo
+	
+	// CONSTANTES NUEVAS (Que el compilador te reclamaba que faltaban)
+	const float VELOCIDAD_MOVIMIENTO = 3.0f; 
+	const float VELOCIDAD_CAIDA_FRAME = 0.5f; 
+	const float VELOCIDAD_SALTO_FRAME = -10.0f;
+	
 public:
 	Personaje(float posX, float posY); 
 	
-	// MÉTODOS DEL MOTOR	
-	void Actualizar(); // Aplica físicas y movimiento (llamado por Juego::Actualizar)
-	void Dibujar(sf::RenderWindow &ventana); // Dibuja el sprite (llamado por Juego::Dibujar)
+	// MÉTODOS NUEVOS (Que el compilador decía que no existían)
+	void ProcesarEntrada(); 
 	
-	// Devuelve el área rectangular del personaje para chequear colisiones 
-	sf::FloatRect ObtenerLimites() { return m_sprite.getGlobalBounds(); } 
+	void Actualizar();      
+	void Dibujar(sf::RenderWindow &ventana); 
 	
-	// Corrige la posición del personaje si choca desde arriba con el suelo
+	sf::FloatRect ObtenerLimites() const { return m_sprite.getGlobalBounds(); } 
 	void TocarSuelo(float alturaSuelo);
 };
+
 #endif
