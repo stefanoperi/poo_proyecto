@@ -25,7 +25,7 @@ void Juego::Jugar(){
 }
 
 void Juego::ProcesarEventos(){
-	sf::Event e;
+	Event e;
 	
 	// Bucle de polling de SFML que obtiene todos los eventos ocurridos desde el último frame
 	while(m_ventana.pollEvent(e)) { 

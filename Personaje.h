@@ -2,33 +2,32 @@
 #define PERSONAJE_H
 
 #include <SFML/Graphics.hpp>
-// #include "GestorRecursos.h" // <-- A veces ayuda incluirlo aquí, o solo en el cpp
+#include <SFML/Window.hpp>
 
 class Personaje {
-protected:
-	sf::Sprite m_sprite;
-	
-	// CAMBIO CLAVE: Antes era float, ahora es Vector2f (X e Y)
-	sf::Vector2f m_velocidad; 
-	
-	bool m_ensuelo;
-	
-	// CONSTANTES NUEVAS (Que el compilador te reclamaba que faltaban)
-	const float VELOCIDAD_MOVIMIENTO = 3.0f; 
-	const float VELOCIDAD_CAIDA_FRAME = 0.5f; 
-	const float VELOCIDAD_SALTO_FRAME = -10.0f;
-	
 public:
-	Personaje(float posX, float posY); 
 	
-	// MÉTODOS NUEVOS (Que el compilador decía que no existían)
-	void ProcesarEntrada(); 
+	virtual ~Personaje(){}; 
 	
-	void Actualizar();      
-	void Dibujar(sf::RenderWindow &ventana); 
+	// Lógica del juego
+	virtual void ProcesarEntrada() = 0; 
+	virtual void Actualizar() = 0; 
 	
-	sf::FloatRect ObtenerLimites() const { return m_sprite.getGlobalBounds(); } 
-	void TocarSuelo(float alturaSuelo);
+	// Colisiones y Propiedades
+	virtual float ObtenerAlturaPies() const = 0; 
+	virtual void TocoElSuelo(const float ALTURA_SUELO) = 0;
+	
+	// Renderizado
+	virtual void Dibujar(sf::RenderWindow &ventana) = 0; 
+	
+protected:
+	sf::Vector2f m_posicion;
+	sf::Vector2f m_velocidad;
+	sf::Sprite m_sprite;
+	sf::Texture m_textura;
+	sf::FloatRect m_cajaColision; 
+	
+	bool m_enElSuelo;
 };
 
-#endif
+#endif // PERSONAJE_H

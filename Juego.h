@@ -2,7 +2,7 @@
 #define JUEGO_H
 #include <SFML/Graphics.hpp>
 #include  "Escena.h"
-using namespace sf;
+
 class Juego{
 public:
 	Juego();
@@ -13,7 +13,7 @@ public:
 	void PonerEscena(Escena *nueva_escena);
 	
 private:
-	RenderWindow m_ventana;
+	sf::RenderWindow m_ventana;
 	Escena *m_escena;
 	Escena *m_nueva_escena = nullptr;
 };

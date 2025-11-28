@@ -4,6 +4,7 @@
 #include "GestorRecursos.h"
 #include <iostream>
 using namespace sf;
+#include "Nivel.h" 
 
 Menu::Menu(){
 	m_fuente = GestorRecursos::ObtenerFuente("text_fonts/ScienceGothic.ttf");
@@ -35,21 +36,15 @@ void Menu::Actualizar(Juego &j) {
 	
 	m_t1.setCharacterSize(tamanio_actual);
 }
-#include "LevelScene.h" // Necesario para la transición
 
-// ?? CORRECCIÓN: Agregar la IMPLEMENTACIÓN COMPLETA del método
+
 void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
-	
-	// 1. Solo nos interesa el evento de TECLA PRESIONADA
+
 	if (e.type == sf::Event::KeyPressed) {
 		
 		// 2. Revisamos si la tecla presionada es 'Enter'
 		if (e.key.code == sf::Keyboard::Return) {
-			
-			// 3. Solicitar el cambio de escena
-			std::cout << "DEBUG: Presionando Enter. Cambiando a LevelScene." << std::endl;
-			// ¡Esto requiere que LevelScene.h esté incluido!
-			j.PonerEscena(new LevelScene()); 
+			j.PonerEscena(new Nivel()); 
 			
 		}
 	}
