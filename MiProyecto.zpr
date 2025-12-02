@@ -36,6 +36,9 @@ cursor=0:0
 [source]
 path=Personaje.cpp
 cursor=0:0
+[source]
+path=Pesado.cpp
+cursor=0:0
 [header]
 path=Agil.h
 cursor=0:0
@@ -70,7 +73,13 @@ cursor=0:0
 path=assets\agil_sprite.png
 cursor=0:0
 [other]
+path=assets\pesado_sprite.png
+cursor=0:0
+[other]
 path=assets\player_placeholder.png
+cursor=0:0
+[other]
+path=Debug_Win32\Agil.o
 cursor=0:0
 [other]
 path=Debug_Win32\GestorRecursos.o
@@ -101,6 +110,9 @@ path=Debug_Win32\Nivel.o
 cursor=0:0
 [other]
 path=Debug_Win32\Personaje.o
+cursor=0:0
+[other]
+path=Debug_Win32\Pesado.o
 cursor=0:0
 [other]
 path=Debug_Win32\tp.exe

@@ -33,8 +33,9 @@ void Pesado::ProcesarEntrada() {
 	
 	bool teclaArriba = Keyboard::isKeyPressed(Keyboard::Up);
 	
-	// Salto simple y corto (sin doble salto)
-	if (teclaArriba && !m_saltoPresionadoAntes) {
+	// Salto simple, verifica si salto antes para evitar el efecto rebote 
+	// ya que se procesa mas rapido de lo q el usuario suelta el dedo
+	if (teclaArriba and m_saltoPresionadoAntes == false) {
 		if (m_enElSuelo) {
 			m_velocidad.y = FUERZA_SALTO;
 			m_enElSuelo = false;
