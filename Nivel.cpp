@@ -6,6 +6,8 @@
 #include "Pesado.h"
 #include "GestorRecursos.h"
 
+#include <string>
+using namespace std;
 using namespace sf;  
 /* calculamos exactamente cuántos tiles entran en cada dimensión (considerando una pantalla de 1920*1080)
 y considerando q los tiles  miden 18x18px
@@ -70,29 +72,19 @@ void Nivel::Actualizar(Juego &j) {
 }
 
 void Nivel::Dibujar(RenderWindow &ventana) {
-	ventana.clear(sf::Color::Black); //Fondo celeste
+; //Fondo celeste
 	ventana.draw(m_spriteFondo);
 	
 	for (int y = 0; y < m_matrizDatos.size(); y++) {
 		for (int x = 0; x < m_matrizDatos[y].size(); x++) {
 			int tipoTile = m_matrizDatos[y][x];
-		
-			if (tipoTile != TILE_VACIO) {
-				std::string nombreTextura;
-				if (tipoTile == TILE_TIERRA) { 
-					nombreTextura = "assets/Tiles/tile_0034.png";
-				} 
-				else if (tipoTile == TILE_PLATAFORMA) { 
-					nombreTextura = "assets/Tiles/tile_0025.png"; 
-				}
-				sf::Sprite sprite;
-				sprite.setTexture(GestorRecursos::ObtenerTextura(nombreTextura));
-				sprite.setPosition((float)(x * TAMANO_TILE), (float)(y * TAMANO_TILE));
-				ventana.draw(sprite);
+			string nombreTextura = "assets/Tiles/tile_0000.png";
+			sf::Sprite sprite;
+			sprite.setTexture(GestorRecursos::ObtenerTextura(nombreTextura));
+			sprite.setPosition((float)(x * TAMANO_TILE), (float)(y * TAMANO_TILE));
+			ventana.draw(sprite);
 			}
-		}
-	}
-	
+		}	
 	m_agil->Dibujar(ventana);
 	m_pesado->Dibujar(ventana);
 	ventana.display();
