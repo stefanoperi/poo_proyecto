@@ -1,59 +1,108 @@
-#include <SFML/Graphics/RenderWindow.hpp>
 #include "Menu.h"
 #include "Juego.h"
 #include "GestorRecursos.h"
+#include "Nivel.h"
 #include <iostream>
-using namespace sf;
-#include "Nivel.h" 
 
-Menu::Menu(){
+using namespace sf;
+
+Menu::Menu() {
 	m_fuente = GestorRecursos::ObtenerFuente("text_fonts/ScienceGothic.ttf");
-	m_t1.setFont(m_fuente);
-	m_t2.setFont(m_fuente);
 	
-	m_t1.setString("Gordo y agil, el juego");
+	// Inicializamos el estado: Empezamos parados en la opción 0 (Jugar)
+	m_opcionSeleccionada = 0;
 	
-	/// IMPORTANTE: HAY Q SACAR LOS NUMEROS Y USAR VARIABLES PARA LAS POSICIONES!!
-	m_t1.setPosition(90,150);
-	m_t1.setCharacterSize(50);
+	// --- TÍTULO ---
+	m_titulo.setFont(m_fuente);
+	m_titulo.setString("Gordo y agil, el juego");
+	m_titulo.setFillColor(Color::White);
+	// El tamaño se controla en Actualizar
 	
-	m_t2.setString("<presione Enter para comenzar a jugar>");
-	m_t2.setFillColor({150,150,150});
-	m_t2.setPosition(100,350);
-	m_t2.setCharacterSize(20);
+	// --- OPCIÓN 1: JUGAR (Índice 0) ---
+	m_txtJugar.setFont(m_fuente);
+	m_txtJugar.setString("JUGAR"); // Texto corto es mejor para menús
+	// El color y tamaño lo definimos dinámicamente en Actualizar
+	
+	// --- OPCIÓN 2: PUNTAJES (Índice 1) ---
+	m_txtPuntajes.setFont(m_fuente);
+	m_txtPuntajes.setString("VER MEJORES PUNTAJES");
 }
+
 void Menu::Actualizar(Juego &j) {
-	static float tamanio_actual = 20;
+	//  Animación del Título  
+	static float tamanioTitulo = 50;
 	static float dir = 0.4;
 	
-	const int minTam = 15;
-	const int maxTam = 45;
+	tamanioTitulo += dir;
+	if (tamanioTitulo >= 55) dir = -0.4;
+	if (tamanioTitulo <= 45) dir = 0.4;
+	m_titulo.setCharacterSize((unsigned int)tamanioTitulo);
 	
-	tamanio_actual += dir;
+	//  Lógica Visual de Selección 
+	// Primero ponemos ambas opciones en estado "No Seleccionado" (Gris y chicas)
+	m_txtJugar.setFillColor({150, 150, 150});
+	m_txtJugar.setCharacterSize(30);
+	m_txtPuntajes.setFillColor({150, 150, 150});
+	m_txtPuntajes.setCharacterSize(30);
 	
-	if (tamanio_actual >= maxTam) dir = -0.4;
-	if (tamanio_actual <= minTam) dir = 0.4;
 	
-	m_t1.setCharacterSize(tamanio_actual);
+	// Iluminamos solo la que coincida con m_opcionSeleccionada
+	if (m_opcionSeleccionada == 0) {
+		m_txtJugar.setFillColor(Color::Yellow); 
+		m_txtJugar.setCharacterSize(40);        
+	} 
+	else if (m_opcionSeleccionada == 1) {
+		m_txtPuntajes.setFillColor(Color::Yellow);
+		m_txtPuntajes.setCharacterSize(40);
+	}
 }
-
 
 void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
-
 	if (e.type == sf::Event::KeyPressed) {
+		// Navegacion
+		if (e.key.code == sf::Keyboard::Down) {
+			m_opcionSeleccionada++; // Bajamos
+			if (m_opcionSeleccionada > 1) m_opcionSeleccionada = 0; // Si pasamos la última, volvemos a la primera (Loop)
+		}
 		
-		// 2. Revisamos si la tecla presionada es 'Enter'
+		if (e.key.code == sf::Keyboard::Up) {
+			m_opcionSeleccionada--; // Subimos
+			if (m_opcionSeleccionada < 0) m_opcionSeleccionada = 1; // Si subimos de la primera, vamos a la última
+		}
+		
 		if (e.key.code == sf::Keyboard::Return) {
-			j.PonerEscena(new Nivel()); 
-			
+			if (m_opcionSeleccionada == 0) {
+				// Opción Jugar
+				j.PonerEscena(new Nivel());
+			}
+			if (m_opcionSeleccionada == 1) {
+				// Opción Puntajes
+				std::cout << "Falta implementar la pantalla de puntajes" << std::endl;
+				// j.PonerEscena(new PantallaPuntajes());
+			}
 		}
 	}
-	
-	// Aquí puedes añadir manejo de otros eventos si los necesitas
 }
+
 void Menu::Dibujar(RenderWindow &ventana){
-	ventana.clear({0,0,0});
-	ventana.draw(m_t1);
-	ventana.draw(m_t2);
+	ventana.clear(sf::Color::Black);
+	float ancho = (float)ventana.getSize().x;
+	float alto = (float)ventana.getSize().y; 
+	
+	// 1. Título
+	FloatRect rTitulo = m_titulo.getGlobalBounds();
+	m_titulo.setPosition((ancho - rTitulo.width)/2.0f, alto * 0.2f); // 20% de altura
+	ventana.draw(m_titulo);
+	
+	// 2. Opción Jugar (Arriba)
+	FloatRect rJugar = m_txtJugar.getGlobalBounds();
+	m_txtJugar.setPosition((ancho - rJugar.width)/2.0f, alto * 0.5f); // 50% de altura
+	ventana.draw(m_txtJugar);
+	
+	// 3. Opción Puntajes (Abajo)
+	FloatRect rPuntajes = m_txtPuntajes.getGlobalBounds();
+	m_txtPuntajes.setPosition((ancho - rPuntajes.width)/2.0f, alto * 0.65f); // 65% de altura
+	ventana.draw(m_txtPuntajes);
 	ventana.display();
+	
 }

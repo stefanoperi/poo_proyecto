@@ -1,12 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include "Escena.h"
+#include "Escena.h" 
+#include <SFML/Graphics.hpp>
 
-
-class Menu : public Escena{
+class Menu : public Escena {
 public:
 	Menu();
 	void Actualizar(Juego &j) override;
@@ -15,6 +12,11 @@ public:
 	
 private:
 	sf::Font m_fuente;
-	sf::Text m_t1, m_t2;
+	sf::Text m_titulo; 
+	sf::Text m_txtJugar;    
+	sf::Text m_txtPuntajes; 
+	// Variable de ESTADO: 0 = Jugar, 1 = Puntajes
+	int m_opcionSeleccionada; 
 };
+
 #endif
