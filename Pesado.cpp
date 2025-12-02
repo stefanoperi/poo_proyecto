@@ -7,8 +7,6 @@ using namespace sf;
 Pesado::Pesado(float x, float y) {
 	m_posicion = Vector2f(x, y);
 	m_velocidad = Vector2f(0.0f, 0.0f);
-	m_enElSuelo = false;
-	m_saltoPresionadoAntes = false;
 	
 	m_textura = GestorRecursos::ObtenerTextura("assets/pesado_sprite.png");
 	m_sprite.setTexture(m_textura);
@@ -16,55 +14,35 @@ Pesado::Pesado(float x, float y) {
 	
 	// Caja de colisión basada en el tamaño de la textura
 	sf::Vector2u tamano = m_textura.getSize();
-	m_cajaColision = FloatRect(m_posicion.x, m_posicion.y, 
-							   tamano.x, tamano.y);
+	m_cajaColision = FloatRect(m_posicion.x, m_posicion.y,tamano.x, tamano.y);
 }
 
 void Pesado::ProcesarEntrada() {
-	m_velocidad.x = 0.0f;
+	m_velocidad = Vector2f(0.0f, 0.0f);
 	
-	// Controles con Flechitas
-	if (Keyboard::isKeyPressed(Keyboard::Left)) {
-		m_velocidad.x = -VELOCIDAD_MAXIMA;
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Right)) {
-		m_velocidad.x = VELOCIDAD_MAXIMA;
-	}
+	if (Keyboard::isKeyPressed(Keyboard::Left)) m_velocidad.x = -VELOCIDAD_MAXIMA;
+	if (Keyboard::isKeyPressed(Keyboard::Right)) m_velocidad.x = VELOCIDAD_MAXIMA;
 	
-	bool teclaArriba = Keyboard::isKeyPressed(Keyboard::Up);
-	
-	// Salto simple, verifica si salto antes para evitar el efecto rebote 
-	// ya que se procesa mas rapido de lo q el usuario suelta el dedo
-	if (teclaArriba and m_saltoPresionadoAntes == false) {
-		if (m_enElSuelo) {
-			m_velocidad.y = FUERZA_SALTO;
-			m_enElSuelo = false;
-		}
-	}
-	m_saltoPresionadoAntes = teclaArriba;
+	if (Keyboard::isKeyPressed(Keyboard::Up)) m_velocidad.y = -VELOCIDAD_MAXIMA;
+	if (Keyboard::isKeyPressed(Keyboard::Down)) m_velocidad.y = VELOCIDAD_MAXIMA;
 }
-
 void Pesado::Actualizar() {
-	if (m_enElSuelo == false) {
-		m_velocidad.y += GRAVEDAD;
-	}
-	
+	// 1. Movemos la posición lógica (La caja de colisión)
 	m_posicion += m_velocidad;
 	
-	m_sprite.setPosition(m_posicion);
+	// 2. Sincronizamos la caja
 	m_cajaColision.left = m_posicion.x;
 	m_cajaColision.top = m_posicion.y;
+	
+	// 3. Ajuste Visual (OFFSET)
+	// El sprite es 96x80, la caja es 30x15. Centramos y subimos el dibujo.
+	float offsetX = 33.0f; // (96 - 30) / 2
+	float offsetY = 65.0f; // (80 - 15)
+	
+	m_sprite.setPosition(m_posicion.x - offsetX, m_posicion.y - offsetY);
 }
 
-float Pesado::ObtenerAlturaPies() const {
-	return m_cajaColision.top + m_cajaColision.height;
-}
 
-void Pesado::TocoElSuelo(const float ALTURA_SUELO) {
-	m_posicion.y = ALTURA_SUELO - m_cajaColision.height;
-	m_velocidad.y = 0.0f;
-	m_enElSuelo = true;
-}
 
 void Pesado::Dibujar(RenderWindow &ventana) {
 	ventana.draw(m_sprite);

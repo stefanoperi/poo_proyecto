@@ -6,28 +6,24 @@
 
 class Personaje {
 public:
-	
 	virtual ~Personaje(){}; 
 	
-	// Lógica del juego
+	// Métodos obligatorios para los hijos
 	virtual void ProcesarEntrada() = 0; 
 	virtual void Actualizar() = 0; 
-	
-	// Colisiones y Propiedades
-	virtual float ObtenerAlturaPies() const = 0; 
-	virtual void TocoElSuelo(const float ALTURA_SUELO) = 0;
-	
-	// Renderizado
 	virtual void Dibujar(sf::RenderWindow &ventana) = 0; 
 	
-protected:
-	sf::Vector2f m_posicion;
-	sf::Vector2f m_velocidad;
-	sf::Sprite m_sprite;
-	sf::Texture m_textura;
-	sf::FloatRect m_cajaColision; 
+	// Getters útiles
+	virtual sf::Vector2f ObtenerPosicion() const { return m_posicion; }
+	virtual sf::FloatRect ObtenerCaja() const { return m_cajaColision; }
 	
-	bool m_enElSuelo;
+protected:
+		// Variables accesibles por Agil y Pesado
+		sf::Vector2f m_posicion;
+		sf::Vector2f m_velocidad;
+		sf::Sprite m_sprite;
+		sf::Texture m_textura; // Nota: Idealmente usarías punteros, pero esto funciona por ahora
+		sf::FloatRect m_cajaColision; 
 };
 
 #endif // PERSONAJE_H

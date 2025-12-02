@@ -13,16 +13,11 @@ public:
 	
 	void ProcesarEntrada() override;
 	void Actualizar() override;
-	float ObtenerAlturaPies() const override;
-	void TocoElSuelo(const float ALTURA_SUELO) override;
+
 	void Dibujar(RenderWindow &ventana) override;
 	
 private:
 	const float VELOCIDAD_MAXIMA = 15.0f; 
-	const float FUERZA_SALTO = -12.0f; 
-	const float GRAVEDAD = 1.5f; 
-	
-	bool m_saltoPresionadoAntes;
 };
 
 #endif // PESADO_H

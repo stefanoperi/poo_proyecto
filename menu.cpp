@@ -9,21 +9,16 @@ using namespace sf;
 Menu::Menu() {
 	m_fuente = GestorRecursos::ObtenerFuente("text_fonts/ScienceGothic.ttf");
 	
-	// Inicializamos el estado: Empezamos parados en la opción 0 (Jugar)
+	// Empezamos parados en la opción 0 (Jugar)
 	m_opcionSeleccionada = 0;
-	
-	// --- TÍTULO ---
+
 	m_titulo.setFont(m_fuente);
 	m_titulo.setString("Gordo y agil, el juego");
 	m_titulo.setFillColor(Color::White);
-	// El tamaño se controla en Actualizar
 	
-	// --- OPCIÓN 1: JUGAR (Índice 0) ---
 	m_txtJugar.setFont(m_fuente);
-	m_txtJugar.setString("JUGAR"); // Texto corto es mejor para menús
-	// El color y tamaño lo definimos dinámicamente en Actualizar
+	m_txtJugar.setString("JUGAR"); 
 	
-	// --- OPCIÓN 2: PUNTAJES (Índice 1) ---
 	m_txtPuntajes.setFont(m_fuente);
 	m_txtPuntajes.setString("VER MEJORES PUNTAJES");
 }
