@@ -13,16 +13,17 @@ public:
 	virtual void Actualizar() = 0; 
 	virtual void Dibujar(sf::RenderWindow &ventana) = 0; 
 	
-	// Getters útiles
-	virtual sf::Vector2f ObtenerPosicion() const { return m_posicion; }
-	virtual sf::FloatRect ObtenerCaja() const { return m_cajaColision; }
+	// Metodos virtuales no puros
+	virtual sf::FloatRect ObtenerCaja();
+	virtual void GuardarPosicion();
+	virtual void RestaurarPosicion();
 	
 protected:
-		// Variables accesibles por Agil y Pesado
 		sf::Vector2f m_posicion;
+		sf::Vector2f m_posicionAnterior;
 		sf::Vector2f m_velocidad;
 		sf::Sprite m_sprite;
-		sf::Texture m_textura; // Nota: Idealmente usarías punteros, pero esto funciona por ahora
+		sf::Texture m_textura; 
 		sf::FloatRect m_cajaColision; 
 };
 

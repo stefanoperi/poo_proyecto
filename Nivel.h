@@ -32,6 +32,7 @@ public:
 	Nivel();
 	~Nivel() override;
 	
+	bool HayColision(const sf::FloatRect& caja);
 	void Actualizar(Juego &j) override;
 	void Dibujar(sf::RenderWindow &ventana) override;
 	void ProcesarEventos(Juego &j, sf::Event &e) override;
