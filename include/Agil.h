@@ -14,9 +14,9 @@ public:
 	void ProcesarEntrada() override;
 	void Actualizar() override;
 	void Dibujar(RenderWindow &ventana) override;
-	
+
 private:
 	// Constantes de juego específicas de Agil
-	const float VELOCIDAD_MAXIMA = 30.0f;
+	const float VELOCIDAD_MAXIMA = 15.0f;
 };
 #endif // AGIL_H

@@ -10,6 +10,6 @@ void Personaje::GuardarPosicion() {
 void Personaje::RestaurarPosicion() {
 	m_posicion = m_posicionAnterior;
 	m_sprite.setPosition(m_posicion);
-	m_cajaColision.left = m_posicion.x;
-	m_cajaColision.top = m_posicion.y;
+	m_cajaColision.left = m_posicion.x + m_offsetX;
+	m_cajaColision.top = m_posicion.y + m_offsetY; 
 }

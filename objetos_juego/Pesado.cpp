@@ -8,7 +8,7 @@ Pesado::Pesado(float x, float y) {
 	m_posicion = Vector2f(x, y);
 	m_velocidad = Vector2f(0.0f, 0.0f);
 	
-	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/pesado_sprite.png");
+	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/");
 	m_sprite.setTexture(m_textura);
 	m_sprite.setPosition(m_posicion);
 	

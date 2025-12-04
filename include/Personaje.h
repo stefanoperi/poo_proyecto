@@ -25,6 +25,10 @@ protected:
 		sf::Sprite m_sprite;
 		sf::Texture m_textura; 
 		sf::FloatRect m_cajaColision; 
+		// Tamano de cada estado del personaje
+		float m_anchoFrame, m_altoFrame, m_altoCaja, m_anchoCaja;
+		float m_offsetX = 0;
+		float m_offsetY = 0;
 };
 
 #endif // PERSONAJE_H
