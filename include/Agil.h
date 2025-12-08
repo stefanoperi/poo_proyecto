@@ -5,7 +5,7 @@
 #include "Personaje.h"
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
+
 class Agil : public Personaje{
 public:
 	Agil(float x, float y);
@@ -13,10 +13,10 @@ public:
 	
 	void ProcesarEntrada() override;
 	void Actualizar() override;
-	void Dibujar(RenderWindow &ventana) override;
+	void Dibujar(sf::RenderWindow &ventana) override;
 	
 private:
-	// Constantes de juego espec?ficas de Agil
-	const float VELOCIDAD_MAXIMA = 15.0f;
+	// Constantes de juego especificas de Agil
+	const float VELOCIDAD_MAXIMA = 10.0f;
 };
 #endif // AGIL_H

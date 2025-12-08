@@ -66,7 +66,4 @@ void Agil::Actualizar() {
 
 void Agil::Dibujar(RenderWindow &ventana) {
 	ventana.draw(m_sprite);
-	
-
-	
 }
