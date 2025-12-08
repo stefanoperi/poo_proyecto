@@ -6,14 +6,14 @@ using namespace sf;
 Agil::Agil(float x, float y) {
 	m_posicion = Vector2f(x, y);
 	m_velocidad = Vector2f(0.0f, 0.0f);
-
+	
 	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/Fighter/idle.png");
 	m_sprite.setTexture(m_textura);
-
+	
 	sf::Vector2u tamanoTextura = m_textura.getSize();
 	m_anchoFrame = tamanoTextura.x / 19;  // Divide por 19 columnas 
 	m_altoFrame = tamanoTextura.y / 4;    // Divide por 4 filas
-
+	
 	// Configura el rect de textura para mostrar al principio el primer frame
 	m_sprite.setTextureRect(IntRect(0, 0, m_anchoFrame, m_altoFrame));
 	
@@ -29,7 +29,7 @@ Agil::Agil(float x, float y) {
 
 void Agil::ProcesarEntrada() {
 	m_velocidad = Vector2f(0.0f, 0.0f);
-
+	
 	// Movimiento y cambio de sprite
 	if (Keyboard::isKeyPressed(Keyboard::A)){ 
 		m_velocidad.x = -VELOCIDAD_MAXIMA;
@@ -54,7 +54,7 @@ void Agil::ProcesarEntrada() {
 void Agil::Actualizar() {
 	// Por cada frame (Cada iteracion de actualizar) se ajusta la posicion segun la velocidad
 	m_posicion += m_velocidad;
-
+	
 	// Actualiza la posición del Sprite 
 	m_sprite.setPosition(m_posicion);
 	
@@ -67,12 +67,6 @@ void Agil::Actualizar() {
 void Agil::Dibujar(RenderWindow &ventana) {
 	ventana.draw(m_sprite);
 	
-	// DEBUG: Visualizar la caja de colisión
-	RectangleShape debugCaja(Vector2f(m_cajaColision.width, m_cajaColision.height));
-	debugCaja.setPosition(m_cajaColision.left, m_cajaColision.top);
-	debugCaja.setFillColor(Color::Transparent);
-	debugCaja.setOutlineColor(Color::Red);
-	debugCaja.setOutlineThickness(1);
-	ventana.draw(debugCaja);
+
 	
 }

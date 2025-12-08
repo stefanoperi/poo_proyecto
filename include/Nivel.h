@@ -12,7 +12,7 @@ using namespace std;
 class Nivel : public Escena {
 private:
 	Personaje* m_agil;
-	Personaje* m_pesado;
+	Personaje* m_enemigo;
 	
 	std::vector<std::vector<int>> m_matrizDatos;
 	string m_rutaDelFondo = "recursos/texturas/fondo_nivel_1.png";

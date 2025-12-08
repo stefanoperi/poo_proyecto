@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Agil.h"
-#include "Pesado.h"
+#include "Enemigo.h"
 #include "GestorRecursos.h"
 #include "TiposDeTile.h"
 using namespace sf;
@@ -16,12 +16,12 @@ Nivel::Nivel():
 	GenerarMapa();
 
 	m_agil = new Agil(700.0f, 300.0f);
-	m_pesado = new Pesado(700.0f, 300.0f);
+	m_enemigo = new Enemigo(800.0f, 300.0f, m_agil);
 }
 
 Nivel::~Nivel() {
 	delete m_agil;
-	delete m_pesado;
+	delete m_enemigo;
 }
 void Nivel::GenerarMapa(){
 	m_matrizDatos.resize(FILAS, std::vector<int>(COLUMNAS));
@@ -79,23 +79,23 @@ bool Nivel::HayColision(const sf::FloatRect& caja) {
 void Nivel::Actualizar(Juego &j) {
 	// Procesar inputs
 	m_agil->ProcesarEntrada();
-	m_pesado->ProcesarEntrada();
+	m_enemigo->ProcesarEntrada();
 	
 	// Guardar posiciones antes de mover
 	m_agil->GuardarPosicion();
-	m_pesado->GuardarPosicion();
+	m_enemigo->GuardarPosicion();
 	
 	// Mover personajes
 	m_agil->Actualizar();
-	m_pesado->Actualizar();
+	m_enemigo->Actualizar();
 	
 	// Corregir si chocan con paredes
 	if (HayColision(m_agil->ObtenerCaja())) {
 		m_agil->RestaurarPosicion();
 	}
 	
-	if (HayColision(m_pesado->ObtenerCaja())) {
-		m_pesado->RestaurarPosicion();
+	if (HayColision(m_enemigo->ObtenerCaja())) {
+		m_enemigo->RestaurarPosicion();
 	}
 }
 
@@ -114,7 +114,7 @@ void Nivel::Dibujar(RenderWindow &ventana) {
 		}
 	}
 	m_agil->Dibujar(ventana);
-	m_pesado->Dibujar(ventana);
+	m_enemigo->Dibujar(ventana);
 	ventana.display();
 }
 void Nivel::ProcesarEventos(Juego &j, Event &e) {

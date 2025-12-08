@@ -3,6 +3,7 @@
 sf::FloatRect Personaje::ObtenerCaja(){
 	return m_cajaColision;
 }
+
 void Personaje::GuardarPosicion() {
 	m_posicionAnterior = m_posicion;
 }
