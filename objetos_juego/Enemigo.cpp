@@ -12,7 +12,7 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
 	m_objetivo = objetivo;
 	m_frameAtaque = 0;
 	m_timerAnimacion = 0;
-	m_estaAtacando = false;
+	m_estaAtacando = false; 	
 	
 	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Idle/Idle_F.png");
 	m_sprite.setTexture(m_textura);

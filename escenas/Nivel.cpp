@@ -12,16 +12,19 @@ Nivel::Nivel():
 	FILAS(60), 
 	COLUMNAS(107)
 {
+	// Semilla aleatoria basada en la hora actual
+	srand(time(0));
 	m_spriteFondo.setTexture(GestorRecursos::ObtenerTextura(m_rutaDelFondo));
 	GenerarMapa();
-
 	m_agil = new Agil(700.0f, 300.0f);
-	m_enemigo = new Enemigo(800.0f, 300.0f, m_agil);
 }
 
 Nivel::~Nivel() {
 	delete m_agil;
-	delete m_enemigo;
+	for (size_t i = 0; i < m_enemigos.size(); i++) {
+		delete m_enemigos[i];
+	}
+	m_enemigos.clear();
 }
 void Nivel::GenerarMapa(){
 	m_matrizDatos.resize(FILAS, std::vector<int>(COLUMNAS));
@@ -77,26 +80,38 @@ bool Nivel::HayColision(const sf::FloatRect& caja) {
 }
 
 void Nivel::Actualizar(Juego &j) {
-	// Procesar inputs
+	m_contadorTiempo++;
+	// Si pasaron más de 100 vueltas crea un nuevo enemigo
+	if (m_contadorTiempo > 100) {
+		int xRandom = (rand() % (COLUMNAS - 4)) + 2; // Entre columna 2 y antepenúltima
+		int yRandom = (rand() % (FILAS - 4)) + 2;    // Entre fila 2 y antepenúltima
+		
+		// Convertir coordenadas de grilla a pixeles
+		float posX = xRandom * TAMANO_TILE;
+		float posY = yRandom * TAMANO_TILE;
+		
+		Enemigo* nuevoEnemigo = new Enemigo(posX, posY, m_agil);
+		m_enemigos.push_back(nuevoEnemigo);
+		m_contadorTiempo = 0;
+	}
+	// Actualiza al jugador
 	m_agil->ProcesarEntrada();
-	m_enemigo->ProcesarEntrada();
-	
-	// Guardar posiciones antes de mover
 	m_agil->GuardarPosicion();
-	m_enemigo->GuardarPosicion();
-	
-	// Mover personajes
 	m_agil->Actualizar();
-	m_enemigo->Actualizar();
 	
-	// Corregir si chocan con paredes
+	// Corrige si choca con una pared
 	if (HayColision(m_agil->ObtenerCaja())) {
 		m_agil->RestaurarPosicion();
 	}
-	
-	if (HayColision(m_enemigo->ObtenerCaja())) {
-		m_enemigo->RestaurarPosicion();
+	// Actualiza todos los enemigos
+	for (size_t i = 0; i < m_enemigos.size(); i++) {
+		m_enemigos[i]->GuardarPosicion();
+		m_enemigos[i]->Actualizar();
+		if (HayColision(m_enemigos[i]->ObtenerCaja())) {
+			m_enemigos[i]->RestaurarPosicion();
+		}
 	}
+	
 }
 
 void Nivel::Dibujar(RenderWindow &ventana) {
@@ -114,7 +129,9 @@ void Nivel::Dibujar(RenderWindow &ventana) {
 		}
 	}
 	m_agil->Dibujar(ventana);
-	m_enemigo->Dibujar(ventana);
+	for (size_t i = 0; i < m_enemigos.size(); i++) {
+		m_enemigos[i]->Dibujar(ventana);
+	}
 	ventana.display();
 }
 void Nivel::ProcesarEventos(Juego &j, Event &e) {

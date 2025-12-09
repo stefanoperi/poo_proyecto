@@ -7,15 +7,13 @@
 #include <string>
 
 
-using namespace std;
-
 class Nivel : public Escena {
 private:
 	Personaje* m_agil;
-	Personaje* m_enemigo;
-	
+	std::vector<Personaje*> m_enemigos;
+	int m_contadorTiempo;
 	std::vector<std::vector<int>> m_matrizDatos;
-	string m_rutaDelFondo = "recursos/texturas/fondo_nivel_1.png";
+	std::string m_rutaDelFondo = "recursos/texturas/fondo_nivel_1.png";
 	sf::Sprite m_spriteFondo;
 	
 	const int TAMANO_TILE;
