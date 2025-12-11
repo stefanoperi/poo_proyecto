@@ -3,13 +3,14 @@
 
 #include "Escena.h"
 #include "Personaje.h"
+#include "Agil.h"
 #include <vector>
 #include <string>
 
 
 class Nivel : public Escena {
 private:
-	Personaje* m_agil;
+	Agil* m_agil;
 	std::vector<Personaje*> m_enemigos;
 	int m_contadorTiempo;
 	std::vector<std::vector<int>> m_matrizDatos;
@@ -20,6 +21,20 @@ private:
 	const int FILAS;
 	const int COLUMNAS;
 	void GenerarMapa();
+	
+	sf::Text m_textoTiempo;     
+	sf::Clock m_relojFrame;    
+	float m_tiempoJuego;
+	
+	bool m_estaPausado;            
+	bool m_escPresionadoPrevio;    
+	sf::RectangleShape m_fondoPausa; 
+	sf::Text m_textoTituloPausa;
+	sf::Text m_textoOpciones;
+	
+	bool m_juegoTerminado;      
+	sf::Text m_textoFin;   
+	sf::Text m_textoOpcionesFin;
 public:
 	Nivel();
 	~Nivel() override;

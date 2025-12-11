@@ -3,6 +3,7 @@
 #include "GestorRecursos.h"
 #include "Nivel.h"
 #include <iostream>
+#include "PantallaPuntajes.h"
 
 using namespace sf;
 
@@ -13,7 +14,7 @@ Menu::Menu() {
 	m_opcionSeleccionada = 0;
 
 	m_titulo.setFont(m_fuente);
-	m_titulo.setString("Gordo y agil, el juego");
+	m_titulo.setString("CALACA SLAYER");
 	m_titulo.setFillColor(Color::White);
 	
 	m_txtJugar.setFont(m_fuente);
@@ -72,8 +73,7 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 			}
 			if (m_opcionSeleccionada == 1) {
 				// Opción Puntajes
-				std::cout << "Falta implementar la pantalla de puntajes" << std::endl;
-				// j.PonerEscena(new PantallaPuntajes());
+				j.PonerEscena(new PantallaPuntajes());
 			}
 		}
 	}
@@ -84,19 +84,19 @@ void Menu::Dibujar(RenderWindow &ventana){
 	float ancho = (float)ventana.getSize().x;
 	float alto = (float)ventana.getSize().y; 
 	
-	// 1. Título
+	//  Título
 	FloatRect rTitulo = m_titulo.getGlobalBounds();
-	m_titulo.setPosition((ancho - rTitulo.width)/2.0f, alto * 0.2f); // 20% de altura
+	m_titulo.setPosition((ancho - rTitulo.width)/2.0f, alto * 0.35f);
 	ventana.draw(m_titulo);
 	
-	// 2. Opción Jugar (Arriba)
+	// Opción Jugar 
 	FloatRect rJugar = m_txtJugar.getGlobalBounds();
-	m_txtJugar.setPosition((ancho - rJugar.width)/2.0f, alto * 0.5f); // 50% de altura
+	m_txtJugar.setPosition((ancho - rJugar.width)/2.0f, alto * 0.5f); 
 	ventana.draw(m_txtJugar);
 	
-	// 3. Opción Puntajes (Abajo)
+	// Opción Puntajes 
 	FloatRect rPuntajes = m_txtPuntajes.getGlobalBounds();
-	m_txtPuntajes.setPosition((ancho - rPuntajes.width)/2.0f, alto * 0.65f); // 65% de altura
+	m_txtPuntajes.setPosition((ancho - rPuntajes.width)/2.0f, alto * 0.65f); 
 	ventana.draw(m_txtPuntajes);
 	ventana.display();
 	

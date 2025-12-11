@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace sf;
 Juego::Juego()
-	: m_ventana(VideoMode(1920,1080),"Gordo y agil, el juego", sf::Style::Fullscreen)
+	: m_ventana(VideoMode(1920,1080),"CALACA SLAYER", sf::Style::Fullscreen)
 {
 	m_ventana.setFramerateLimit(60);
 	m_escena = new Menu();

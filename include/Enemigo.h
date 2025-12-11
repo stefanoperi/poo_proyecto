@@ -13,16 +13,22 @@ public:
 	void ProcesarEntrada() override;
 	void Actualizar() override;
 	void Dibujar(sf::RenderWindow &ventana) override;
+	void RecibirAtaque(int cantidad) override;
 	
 	bool CercaDeJugador();
 	void Atacar();
 	void Perseguir();
 private:
 	const float VELOCIDAD_MAXIMA = 2.0f;
-	int m_frameAtaque;    // Qué dibujito de la tira estamos mostrando (0 al 4)
-	int m_timerAnimacion; // Un contador para que la animación no vaya ultra rápida
-	bool m_estaAtacando; // Para saber si tenemos que cambiar la textura
+	int m_frameAtaque;    
+	int m_timerAnimacion; 
+	bool m_estaAtacando; 
 	Personaje* m_objetivo;
+	bool m_golpeConectado;
+	sf::Texture m_texturaMuerte; 
+	bool m_estaMuriendo;         
+	int m_frameMuerte;         
+	float m_timerMuerte;      
 };
 
 #endif 

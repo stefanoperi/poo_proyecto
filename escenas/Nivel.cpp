@@ -5,16 +5,52 @@
 #include "Enemigo.h"
 #include "GestorRecursos.h"
 #include "TiposDeTile.h"
+#include <sstream>
+#include "ManejadorPuntajes.h"
+#include "Juego.h"
+#include "Menu.h"
 using namespace sf;
 
 Nivel::Nivel(): 
 	TAMANO_TILE(18), 
 	FILAS(60), 
-	COLUMNAS(107)
+	COLUMNAS(107),
+	m_contadorTiempo(0)
 {
 	// Semilla aleatoria basada en la hora actual
 	srand(time(0));
+	m_tiempoJuego = 0.0f; // Empezamos en 0
+	m_textoTiempo.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoTiempo.setCharacterSize(30);
+	m_textoTiempo.setFillColor(Color::White);
+	m_textoTiempo.setPosition(15, 10); // Arriba a la izquierda
+	
+	// Textos de pausa 
+	m_estaPausado = false;
+	m_escPresionadoPrevio = false;
+	m_fondoPausa.setSize(Vector2f(2000.0f, 2000.0f)); 
+	m_fondoPausa.setFillColor(Color(0, 0, 0, 150));
 	m_spriteFondo.setTexture(GestorRecursos::ObtenerTextura(m_rutaDelFondo));
+	m_textoTituloPausa.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf")); 
+	m_textoTituloPausa.setString("PAUSA");
+	m_textoTituloPausa.setCharacterSize(50);
+	m_textoTituloPausa.setFillColor(Color::White);
+	m_textoOpciones.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoOpciones.setString("Presiona ESC para Continuar\nPresiona Q para Salir");
+	m_textoOpciones.setCharacterSize(20);
+	m_textoOpciones.setFillColor(Color::Yellow);
+	
+	// Textos al finalizar el juego
+	m_juegoTerminado = false;
+	m_textoFin.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoFin.setString("¡HAS MUERTO!");
+	m_textoFin.setCharacterSize(60);
+	m_textoFin.setFillColor(sf::Color::Red);
+	m_textoOpcionesFin.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoOpcionesFin.setString("R - Reintentar\nM - Menu Principal\nQ - Salir");
+	m_textoOpcionesFin.setCharacterSize(25);
+	m_textoOpcionesFin.setFillColor(sf::Color::White);
+	
 	GenerarMapa();
 	m_agil = new Agil(700.0f, 300.0f);
 }
@@ -80,9 +116,23 @@ bool Nivel::HayColision(const sf::FloatRect& caja) {
 }
 
 void Nivel::Actualizar(Juego &j) {
+	// Obtiene el tiempo desde la ultima vez que se llamo
+	float dt = m_relojFrame.restart().asSeconds();
+	if (m_estaPausado or m_juegoTerminado) {
+		return; 
+	}
+	if (m_agil->EstaVivo() == false){
+		m_juegoTerminado = true;
+		ManejadorPuntajes::GuardarPuntaje("Jugador", (int)m_tiempoJuego);
+	}
+	m_tiempoJuego += dt;
+	std::stringstream ss;
+	ss << "Tiempo: " << (int)m_tiempoJuego << "s"; 
+	m_textoTiempo.setString(ss.str());
+	
+	// Si pasaron más de 150 vueltas crea un nuevo enemigo
 	m_contadorTiempo++;
-	// Si pasaron más de 100 vueltas crea un nuevo enemigo
-	if (m_contadorTiempo > 100) {
+	if (m_contadorTiempo > 150) {
 		int xRandom = (rand() % (COLUMNAS - 4)) + 2; // Entre columna 2 y antepenúltima
 		int yRandom = (rand() % (FILAS - 4)) + 2;    // Entre fila 2 y antepenúltima
 		
@@ -103,20 +153,56 @@ void Nivel::Actualizar(Juego &j) {
 	if (HayColision(m_agil->ObtenerCaja())) {
 		m_agil->RestaurarPosicion();
 	}
-	// Actualiza todos los enemigos
+	// Verifica si los enemigos chocan con una pared
 	for (size_t i = 0; i < m_enemigos.size(); i++) {
 		m_enemigos[i]->GuardarPosicion();
 		m_enemigos[i]->Actualizar();
 		if (HayColision(m_enemigos[i]->ObtenerCaja())) {
-			m_enemigos[i]->RestaurarPosicion();
+			m_enemigos[i]->RestaurarPosicion(); 
+		}
+	}
+	// Colisiones entre los enemigos y el jugador
+	for (size_t i = 0; i < m_enemigos.size(); i++) {
+		if (m_enemigos[i]->EstaVivo()) {
+			m_enemigos[i]->ResolverColision(*m_agil);
+		}
+	}
+	// Colisiones entre los enemigos mismos
+	for (size_t i = 0; i < m_enemigos.size(); i++) {
+		for (size_t j = i + 1; j < m_enemigos.size(); j++) {
+			if (m_enemigos[i]->EstaVivo() and m_enemigos[j]->EstaVivo()) {
+				m_enemigos[i]->ResolverColision(*m_enemigos[j]);
+			}
 		}
 	}
 	
+	std::vector<BolaEnergia>* listaBolas = m_agil->ObtenerBolas();
+	
+	// Recorre todos los enemigos por cada bola y checkea si se interseccionan
+	if (listaBolas != nullptr and (listaBolas->empty()) == false) {
+		for (int i = listaBolas->size() - 1; i >= 0; i--) {
+			bool bolaExploto = false;
+			sf::FloatRect cajaBola = (*listaBolas)[i].sprite.getGlobalBounds();
+			
+			for (int j = m_enemigos.size() - 1; j >= 0; j--) {
+				if (m_enemigos[j]->EstaVivo()) {
+					if (cajaBola.intersects(m_enemigos[j]->ObtenerCaja())) {
+						m_enemigos[j]->RecibirAtaque(1); 
+						bolaExploto = true;
+						break; 
+					}
+				}
+			}
+			// Si explotó, la borra de la lista original
+			if (bolaExploto) {
+				listaBolas->erase(listaBolas->begin() + i);
+			}
+		}
+	}
 }
-
 void Nivel::Dibujar(RenderWindow &ventana) {
 	ventana.clear(Color(70, 125, 0));  // Verde pasto
-	
+	ventana.draw(m_textoTiempo);
 	// Solo dibujar paredes
 	for (int y = 0; y < m_matrizDatos.size(); y++) {
 		for (int x = 0; x < m_matrizDatos[y].size(); x++) {
@@ -132,10 +218,68 @@ void Nivel::Dibujar(RenderWindow &ventana) {
 	for (size_t i = 0; i < m_enemigos.size(); i++) {
 		m_enemigos[i]->Dibujar(ventana);
 	}
+	
+	if (m_estaPausado and m_juegoTerminado == false) {
+		// 	Centra y Dibuja el titulo
+		Vector2f centro(ventana.getSize().x / 2.0f, ventana.getSize().y / 2.0f);
+		ventana.draw(m_fondoPausa); 
+		FloatRect b = m_textoTituloPausa.getLocalBounds();
+		m_textoTituloPausa.setOrigin(b.width / 2, b.height / 2);
+		m_textoTituloPausa.setPosition(centro.x, centro.y - 50);
+		ventana.draw(m_textoTituloPausa);
+		
+		// Centra y Dibuja opciones
+		b = m_textoOpciones.getLocalBounds(); 
+		m_textoOpciones.setOrigin(b.width / 2, b.height / 2);
+		m_textoOpciones.setPosition(centro.x, centro.y + 30);
+		ventana.draw(m_textoOpciones);
+		
+	}
+	
+	if (m_juegoTerminado) {
+		// Usamos el mismo fondo oscuro de la pausa para ahorrar recursos
+		ventana.draw(m_fondoPausa);
+		
+		Vector2f centro(ventana.getSize().x / 2.0f, ventana.getSize().y / 2.0f);
+		
+		FloatRect b = m_textoFin.getLocalBounds();
+		m_textoFin.setOrigin(b.width / 2, b.height / 2);
+		m_textoFin.setPosition(centro.x, centro.y - 80);
+		ventana.draw(m_textoFin);
+		
+		b = m_textoOpcionesFin.getLocalBounds();
+		m_textoOpcionesFin.setOrigin(b.width / 2, b.height / 2);
+		m_textoOpcionesFin.setPosition(centro.x, centro.y + 50);
+		ventana.draw(m_textoOpcionesFin);
+	}
 	ventana.display();
 }
 void Nivel::ProcesarEventos(Juego &j, Event &e) {
-	if(e.type == Event::KeyPressed && e.key.code == Keyboard::Escape) {
-		// Pausa
+	// Logica al terminar el juego
+	if (e.type == Event::KeyPressed) {
+		if (m_juegoTerminado) {
+			if (e.key.code == Keyboard::R) {
+				// Reintentar
+				j.PonerEscena(new Nivel()); 
+			}
+			else if (e.key.code == Keyboard::M) {
+				// Volver al menú
+				j.PonerEscena(new Menu());
+			}
+			else if (e.key.code == Keyboard::Q) {
+				// Salir
+				exit(0);
+			}
+			return; 
+		}
+		// Entrar y salir del menu de pausa 
+		if (e.key.code == Keyboard::Escape) {
+			m_estaPausado = !m_estaPausado; 
+		}
+		
+		// Salir del juego en pausa
+		if (m_estaPausado and e.key.code == Keyboard::Q) {
+			exit(0); 
+		}
 	}
 }

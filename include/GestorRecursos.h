@@ -15,10 +15,11 @@ public:
 	// Devuelve una textura cargada, cargándola si aún no existe
 	static sf::Texture& ObtenerTextura(const std::string& archivo);
 	
-	///Faltan implementar estas en el .cpp: 
+	
 	// Devuelve una fuente cargada
 	static sf::Font& ObtenerFuente(const std::string& archivo);
 	
+	///Faltan implementar estas en el .cpp: 
 	// Devuelve un buffer de sonido cargado
 	static sf::SoundBuffer& ObtenerSonido(const std::string& archivo);
 	
