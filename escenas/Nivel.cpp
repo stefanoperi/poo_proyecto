@@ -140,9 +140,14 @@ void Nivel::Actualizar(Juego &j) {
 	ss << "Tiempo: " << (int)m_tiempoJuego << "s"; 
 	m_textoTiempo.setString(ss.str());
 	
-	// Si pasaron más de 150 vueltas crea un nuevo enemigo
+	// Aparicion de enemigos progresiva
 	m_contadorTiempo++;
-	if (m_contadorTiempo > 150) {
+	int demoraSpawn = 130 - (int)m_tiempoJuego;
+	
+	if (demoraSpawn < 40) {
+		demoraSpawn = 40;
+	}
+	if (m_contadorTiempo > demoraSpawn) {
 		int xRandom, yRandom;
 		// Solo crea enemigos donde no haya pared ni el texto del tiempo
 		do {
@@ -151,7 +156,7 @@ void Nivel::Actualizar(Juego &j) {
 			yRandom = (rand() % (FILAS - 4)) + 2;    
 		} while (m_matrizDatos[yRandom][xRandom] == TILE_PARED or (xRandom < 12 && yRandom < 5));
 		
-		// Convertir coordenadas de grilla a pixeles
+		// Convertir coordenadas de grilla a pixeles n
 		float posX = xRandom * TAMANO_TILE;
 		float posY = yRandom * TAMANO_TILE;
 		
