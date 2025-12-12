@@ -17,8 +17,6 @@ Nivel::Nivel():
 	COLUMNAS(107),
 	m_contadorTiempo(0)
 {
-	// Semilla aleatoria basada en la hora actual
-	srand(time(0));
 	m_tiempoJuego = 0.0f; // Empezamos en 0
 	m_textoTiempo.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
 	m_textoTiempo.setCharacterSize(30);
@@ -145,8 +143,13 @@ void Nivel::Actualizar(Juego &j) {
 	// Si pasaron más de 150 vueltas crea un nuevo enemigo
 	m_contadorTiempo++;
 	if (m_contadorTiempo > 150) {
-		int xRandom = (rand() % (COLUMNAS - 4)) + 2; // Entre columna 2 y antepenúltima
-		int yRandom = (rand() % (FILAS - 4)) + 2;    // Entre fila 2 y antepenúltima
+		int xRandom, yRandom;
+		// Solo crea enemigos donde no haya pared ni el texto del tiempo
+		do {
+
+			xRandom = (rand() % (COLUMNAS - 4)) + 2;
+			yRandom = (rand() % (FILAS - 4)) + 2;    
+		} while (m_matrizDatos[yRandom][xRandom] == TILE_PARED or (xRandom < 12 && yRandom < 5));
 		
 		// Convertir coordenadas de grilla a pixeles
 		float posX = xRandom * TAMANO_TILE;
@@ -301,6 +304,13 @@ void Nivel::ProcesarEventos(Juego &j, Event &e) {
 						m_textoIngresarNombre.setString("¡Puntaje Guardado!");
 						m_textoIngresarNombre.setFillColor(sf::Color::Green);
 					}
+				}
+				// No guardar
+				if (e.key.code == Keyboard::Escape) {
+					m_yaGuardo = true; 
+					m_textoIngresarNombre.setString("No se guardó el puntaje.");
+					m_textoIngresarNombre.setFillColor(sf::Color::White);
+					m_nombreJugador = "";
 				}
 			}
 			// Mueve el cursor

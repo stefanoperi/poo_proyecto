@@ -9,6 +9,7 @@ Juego::Juego()
 {
 	m_ventana.setFramerateLimit(60);
 	m_escena = new Menu();
+	srand(time(0));
 }
 
 void Juego::Jugar(){
