@@ -15,17 +15,8 @@ public:
 	// Devuelve una textura cargada, cargándola si aún no existe
 	static sf::Texture& ObtenerTextura(const std::string& archivo);
 	
-	
 	// Devuelve una fuente cargada
 	static sf::Font& ObtenerFuente(const std::string& archivo);
-	
-	///Faltan implementar estas en el .cpp: 
-	// Devuelve un buffer de sonido cargado
-	static sf::SoundBuffer& ObtenerSonido(const std::string& archivo);
-	
-	// Limpia todos los recursos cargados (opcional, para cuando cambias de nivel)
-	static void Limpiar();
-	
 private:
 	/// Al poner el constructor en private impide que se construya (no es instanciable) asi no hay q pasarlo siempre como parametro
 	GestorRecursos(){} 

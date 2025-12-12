@@ -51,9 +51,4 @@ sf::Font& GestorRecursos::ObtenerFuente(const std::string& archivo) {
 }
 
 
-///FALTAN HACER ESTOS: 
-// Devuelve un buffer de sonido cargado
-sf::SoundBuffer& ObtenerSonido(const std::string& archivo);
 
-// Limpia todos los recursos cargados (opcional, para cuando cambias de nivel)
-void Limpiar();

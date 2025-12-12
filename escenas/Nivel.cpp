@@ -1,6 +1,7 @@
 #include "Nivel.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Agil.h"
 #include "Enemigo.h"
 #include "GestorRecursos.h"
@@ -9,6 +10,8 @@
 #include "ManejadorPuntajes.h"
 #include "Juego.h"
 #include "Menu.h"
+#include <vector>
+using namespace std;
 using namespace sf;
 
 Nivel::Nivel(): 
@@ -17,11 +20,24 @@ Nivel::Nivel():
 	COLUMNAS(107),
 	m_contadorTiempo(0)
 {
-	m_tiempoJuego = 0.0f; // Empezamos en 0
+	// Soundtrack de fondo
+	vector<string> listaCanciones = {"ost1.wav", "ost2.wav", "ost3.wav" };
+	int cantidadDeCanciones = listaCanciones.size();
+	int indiceRandom = rand() % cantidadDeCanciones;
+	if (m_musicaFondo.openFromFile("recursos/sonidos/nivel/" + listaCanciones[indiceRandom])) {
+		m_musicaFondo.setVolume(15);
+		m_musicaFondo.setLoop(true); // Para que se repita cuando termine
+		m_musicaFondo.play();
+	} else {
+		std::cerr << "No se pudo cargar la musica de fondo." << std::endl;
+	}
+	
+	// Texto de tiempo transcurrido
+	m_tiempoJuego = 0.0f; 
 	m_textoTiempo.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
 	m_textoTiempo.setCharacterSize(30);
 	m_textoTiempo.setFillColor(Color::White);
-	m_textoTiempo.setPosition(15, 10); // Arriba a la izquierda
+	m_textoTiempo.setPosition(15, 10); 
 	
 	// Textos de pausa 
 	m_estaPausado = false;

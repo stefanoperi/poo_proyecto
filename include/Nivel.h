@@ -1,6 +1,6 @@
 #ifndef LEVELSCENE_H
 #define LEVELSCENE_H
-
+#include <SFML/Audio.hpp>
 #include "Escena.h"
 #include "Personaje.h"
 #include "Agil.h"
@@ -25,6 +25,7 @@ private:
 	sf::Text m_textoTiempo;     
 	sf::Clock m_relojFrame;    
 	float m_tiempoJuego;
+	sf::Music m_musicaFondo;
 	
 	bool m_estaPausado;            
 	bool m_escPresionadoPrevio;    
