@@ -35,6 +35,10 @@ private:
 	bool m_juegoTerminado;      
 	sf::Text m_textoFin;   
 	sf::Text m_textoOpcionesFin;
+	sf::Text m_textoIngresarNombre; 
+	sf::Text m_textoNombreUsuario;  
+	std::string m_nombreJugador;    
+	bool m_yaGuardo;
 public:
 	Nivel();
 	~Nivel() override;

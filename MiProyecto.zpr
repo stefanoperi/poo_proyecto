@@ -82,6 +82,9 @@ cursor=0:0
 path=Leeme.txt
 cursor=0:0
 [other]
+path=puntajes.txt
+cursor=0:0
+[other]
 path=Debug_Win32\Agil.o
 cursor=0:0
 [other]
@@ -103,7 +106,13 @@ cursor=0:0
 path=Debug_Win32\main.o
 cursor=0:0
 [other]
+path=Debug_Win32\ManejadorPuntajes.o
+cursor=0:0
+[other]
 path=Debug_Win32\menu.o
+cursor=0:0
+[other]
+path=Debug_Win32\MiProyecto.exe
 cursor=0:0
 [other]
 path=Debug_Win32\MyProject.exe

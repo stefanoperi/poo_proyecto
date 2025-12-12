@@ -42,13 +42,25 @@ Nivel::Nivel():
 	
 	// Textos al finalizar el juego
 	m_juegoTerminado = false;
+	m_yaGuardo = false;         
+	m_nombreJugador = "";
 	m_textoFin.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
 	m_textoFin.setString("¡HAS MUERTO!");
 	m_textoFin.setCharacterSize(60);
 	m_textoFin.setFillColor(sf::Color::Red);
+	
+	m_textoIngresarNombre.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoIngresarNombre.setString("Escribe tu nombre y presiona ENTER:");
+	m_textoIngresarNombre.setCharacterSize(20);
+	m_textoIngresarNombre.setFillColor(sf::Color::Yellow);
+	m_textoNombreUsuario.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoNombreUsuario.setString("_"); 
+	m_textoNombreUsuario.setCharacterSize(30);
+	m_textoNombreUsuario.setFillColor(sf::Color::White);
+	
 	m_textoOpcionesFin.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
 	m_textoOpcionesFin.setString("R - Reintentar\nM - Menu Principal\nQ - Salir");
-	m_textoOpcionesFin.setCharacterSize(25);
+	m_textoOpcionesFin.setCharacterSize(20);
 	m_textoOpcionesFin.setFillColor(sf::Color::White);
 	
 	GenerarMapa();
@@ -123,7 +135,7 @@ void Nivel::Actualizar(Juego &j) {
 	}
 	if (m_agil->EstaVivo() == false){
 		m_juegoTerminado = true;
-		ManejadorPuntajes::GuardarPuntaje("Jugador", (int)m_tiempoJuego);
+
 	}
 	m_tiempoJuego += dt;
 	std::stringstream ss;
@@ -237,47 +249,76 @@ void Nivel::Dibujar(RenderWindow &ventana) {
 	}
 	
 	if (m_juegoTerminado) {
-		// Usamos el mismo fondo oscuro de la pausa para ahorrar recursos
 		ventana.draw(m_fondoPausa);
-		
 		Vector2f centro(ventana.getSize().x / 2.0f, ventana.getSize().y / 2.0f);
 		
+		// Título "HAS MUERTO"
 		FloatRect b = m_textoFin.getLocalBounds();
 		m_textoFin.setOrigin(b.width / 2, b.height / 2);
-		m_textoFin.setPosition(centro.x, centro.y - 80);
+		m_textoFin.setPosition(centro.x, centro.y - 150); // Un poco mas arriba
 		ventana.draw(m_textoFin);
 		
+		// Instrucción
+		b = m_textoIngresarNombre.getLocalBounds();
+		m_textoIngresarNombre.setOrigin(b.width / 2, b.height / 2);
+		m_textoIngresarNombre.setPosition(centro.x, centro.y - 50);
+		ventana.draw(m_textoIngresarNombre);
+		
+		// Nombre que escribe el usuario
+		b = m_textoNombreUsuario.getLocalBounds();
+		m_textoNombreUsuario.setOrigin(b.width / 2, b.height / 2);
+		m_textoNombreUsuario.setPosition(centro.x, centro.y); 
+		ventana.draw(m_textoNombreUsuario);
+		
+		// Opciones (R, M, Q)
 		b = m_textoOpcionesFin.getLocalBounds();
 		m_textoOpcionesFin.setOrigin(b.width / 2, b.height / 2);
-		m_textoOpcionesFin.setPosition(centro.x, centro.y + 50);
+		m_textoOpcionesFin.setPosition(centro.x, centro.y + 100);
 		ventana.draw(m_textoOpcionesFin);
 	}
 	ventana.display();
 }
 void Nivel::ProcesarEventos(Juego &j, Event &e) {
-	// Logica al terminar el juego
-	if (e.type == Event::KeyPressed) {
-		if (m_juegoTerminado) {
-			if (e.key.code == Keyboard::R) {
-				// Reintentar
-				j.PonerEscena(new Nivel()); 
+	if (m_juegoTerminado) {
+		// Escritura del nombre
+		if (!m_yaGuardo) {
+			if (e.type == Event::TextEntered) {
+				char caracterIngresado = static_cast<char>(e.text.unicode);
+				if (std::isalnum(caracterIngresado) && m_nombreJugador.size() < 10) {
+					m_nombreJugador += caracterIngresado;
+				}
 			}
-			else if (e.key.code == Keyboard::M) {
-				// Volver al menú
-				j.PonerEscena(new Menu());
+			if (e.type == Event::KeyPressed) {
+				// Borrar caracter
+				if (e.key.code == Keyboard::BackSpace && m_nombreJugador.size() > 0) {
+					m_nombreJugador.pop_back();
+				}
+				// Guardar 
+				if (e.key.code == Keyboard::Return) {
+					if (m_nombreJugador.size() > 0) { 
+						ManejadorPuntajes::GuardarPuntaje(m_nombreJugador, (int)m_tiempoJuego);
+						m_yaGuardo = true; 
+						m_textoIngresarNombre.setString("¡Puntaje Guardado!");
+						m_textoIngresarNombre.setFillColor(sf::Color::Green);
+					}
+				}
 			}
-			else if (e.key.code == Keyboard::Q) {
-				// Salir
-				exit(0);
-			}
-			return; 
+			// Mueve el cursor
+			m_textoNombreUsuario.setString(m_nombreJugador + "_");
+			
+		}else if (e.type == Event::KeyPressed) { //Otras opciones
+			if (e.key.code == Keyboard::R) j.PonerEscena(new Nivel());
+			else if (e.key.code == Keyboard::M) j.PonerEscena(new Menu());
+			else if (e.key.code == Keyboard::Q) exit(0);
 		}
-		// Entrar y salir del menu de pausa 
+		return; // Retorna para no procesar pausa
+	}
+	
+	// Logica de pausa
+	if (e.type == Event::KeyPressed) {
 		if (e.key.code == Keyboard::Escape) {
 			m_estaPausado = !m_estaPausado; 
 		}
-		
-		// Salir del juego en pausa
 		if (m_estaPausado and e.key.code == Keyboard::Q) {
 			exit(0); 
 		}
