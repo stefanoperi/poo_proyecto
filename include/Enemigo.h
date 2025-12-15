@@ -20,11 +20,15 @@ public:
 	void Perseguir();
 private:
 	const float VELOCIDAD_MAXIMA = 2.0f;
+	sf::Vector2f m_posAnterior;
+	int m_tiempoDesvio;
+	
 	int m_frameAtaque;    
 	int m_timerAnimacion; 
 	bool m_estaAtacando; 
 	Personaje* m_objetivo;
 	bool m_golpeConectado;
+	
 	sf::Texture m_texturaMuerte; 
 	bool m_estaMuriendo;         
 	int m_frameMuerte;         

@@ -1,6 +1,1 @@
-Jugador 14
-Jugador 15
-Jugador 34
-Stefano 56
-Stefano 14
-Stefano 70
+Stefano 86

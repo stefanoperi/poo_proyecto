@@ -139,6 +139,15 @@ cursor=0:0
 path=recursos\fuentes_texto\ScienceGothic.ttf
 cursor=0:0
 [other]
+path=recursos\sonidos\nivel\ost1.wav
+cursor=0:0
+[other]
+path=recursos\sonidos\nivel\ost2.wav
+cursor=0:0
+[other]
+path=recursos\sonidos\nivel\ost3.wav
+cursor=0:0
+[other]
 path=recursos\texturas\agil_sprite.png
 cursor=0:0
 [other]

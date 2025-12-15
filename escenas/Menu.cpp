@@ -33,9 +33,8 @@ void Menu::Actualizar(Juego &j) {
 	if (tamanioTitulo >= 55) dir = -0.4;
 	if (tamanioTitulo <= 45) dir = 0.4;
 	m_titulo.setCharacterSize((unsigned int)tamanioTitulo);
-	
-	//  Lógica Visual de Selección 
-	// Primero ponemos ambas opciones en estado "No Seleccionado" (Gris y chicas)
+
+	// Pone ambas opciones en estado "No Seleccionado" (Gris y chicas)
 	m_txtJugar.setFillColor({150, 150, 150});
 	m_txtJugar.setCharacterSize(30);
 	m_txtPuntajes.setFillColor({150, 150, 150});
@@ -58,12 +57,12 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 		// Navegacion
 		if (e.key.code == sf::Keyboard::Down) {
 			m_opcionSeleccionada++; // Bajamos
-			if (m_opcionSeleccionada > 1) m_opcionSeleccionada = 0; // Si pasamos la última, volvemos a la primera (Loop)
+			if (m_opcionSeleccionada > 1) m_opcionSeleccionada = 0; // Si pasa la última, volvemos a la primera 
 		}
 		
 		if (e.key.code == sf::Keyboard::Up) {
 			m_opcionSeleccionada--; // Subimos
-			if (m_opcionSeleccionada < 0) m_opcionSeleccionada = 1; // Si subimos de la primera, vamos a la última
+			if (m_opcionSeleccionada < 0) m_opcionSeleccionada = 1; // Si subE de la primera, vamos a la última
 		}
 		
 		if (e.key.code == sf::Keyboard::Return) {

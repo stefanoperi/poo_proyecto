@@ -43,7 +43,7 @@ bool Personaje::ResolverColision(Personaje &otro) {
 	// Cantidad de interseccion (cuánto se metió uno dentro del otro)
 	float intersectX = minDistX - std::abs(deltaX);
 	float intersectY = minDistY - std::abs(deltaY);
-	
+	 
 	// Empuja en el eje donde haya menos intersección 
 	if (intersectX < intersectY) {
 		// El choque es horizontal 

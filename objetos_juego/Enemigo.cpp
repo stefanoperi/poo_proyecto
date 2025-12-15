@@ -9,6 +9,9 @@ using namespace sf;
 Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
 	m_posicion = Vector2f(x, y);
 	m_velocidad = Vector2f(0.0f, 0.0f);
+	m_posAnterior = m_posicion;
+	m_tiempoDesvio = 0;
+	
 	m_listoParaBorrar = false;
 	m_vida = 2;
 	m_timerInvulnerabilidad = 0; 
@@ -16,6 +19,7 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
 	m_frameAtaque = 0;
 	m_timerAnimacion = 0;
 	m_estaAtacando = false;
+	
 	m_frameMuerte = 0; 
 	m_timerMuerte = 0;
 	m_texturaMuerte = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Death/Death_F.png");
@@ -40,6 +44,7 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
 }
 
 void Enemigo::ProcesarEntrada() {}
+
 bool Enemigo::CercaDeJugador() {
 	// Obtiene la posición del centro de la caja del jugador
 	auto cajaObjetivo = m_objetivo->ObtenerCaja();
@@ -90,7 +95,21 @@ void Enemigo::Perseguir() {
 	}else if (centroY > centroJugadorY){
 		m_velocidad.y = -1 * m_velocidad.y;
 	}
+	bool atascadoX = std::abs(m_posicion.x - m_posAnterior.x) < 0.1f;
+	bool atascadoY = std::abs(m_posicion.y - m_posAnterior.y) < 0.1f;
+	
+	// Corrige hacia un lado si quedo atascado
+	if (atascadoX && atascadoY) {
+		m_tiempoDesvio++;
+		if (m_tiempoDesvio > 30) { 
+			m_tiempoDesvio = 0;
+			m_velocidad = Vector2f(VELOCIDAD_MAXIMA * 7, 0);
+		}
+	} else { 
+		m_tiempoDesvio = 0; 
+	}
 
+	m_posAnterior = m_posicion;
 	m_posicion += m_velocidad;
 	m_sprite.setPosition(m_posicion);
 	
@@ -148,6 +167,7 @@ void Enemigo::Atacar(){
 		m_frameAtaque = 0;
 		m_timerAnimacion = 0;
 	}
+	
 	// Animacion del ataque
 	m_timerAnimacion++;
 	if (m_timerAnimacion > 7) { 
@@ -160,6 +180,7 @@ void Enemigo::Atacar(){
 		}
 		m_timerAnimacion = 0; 
 	}
+	
 	// Aplica el daño, solo durante los frames 2 y 3
 	if (m_frameAtaque >= 2 and m_frameAtaque <= 3) {
 		if (m_golpeConectado == false) {

@@ -11,11 +11,12 @@ class Personaje {
 public:
 	virtual ~Personaje(){}; 
 	
-	// M?todos obligatorios para los hijos
+	// Metodos obligatorios para los hijos
 	virtual void ProcesarEntrada() = 0; 
 	virtual void Actualizar() = 0;	
 	virtual void Dibujar(sf::RenderWindow &ventana) = 0; 
 	virtual void RecibirAtaque(int cantidad) = 0;
+	
 	// Metodos virtuales no puros
 	virtual sf::FloatRect ObtenerCaja();
 	virtual void GuardarPosicion();

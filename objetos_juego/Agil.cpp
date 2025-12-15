@@ -217,11 +217,10 @@ void Agil::RecibirAtaque(int cantidad) {
 	}
 }
 void Agil::Dibujar(RenderWindow &ventana) {
-	
 	// Dibuja las bolas de energia
 	for (size_t i = 0; i < m_bolas.size(); i++) {
 		ventana.draw(m_bolas[i].sprite);
 	}
-	ventana.draw(m_sprite);
 	
+	ventana.draw(m_sprite);
 }

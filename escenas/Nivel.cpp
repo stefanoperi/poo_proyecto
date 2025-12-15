@@ -25,7 +25,7 @@ Nivel::Nivel():
 	int cantidadDeCanciones = listaCanciones.size();
 	int indiceRandom = rand() % cantidadDeCanciones;
 	if (m_musicaFondo.openFromFile("recursos/sonidos/nivel/" + listaCanciones[indiceRandom])) {
-		m_musicaFondo.setVolume(15);
+		m_musicaFondo.setVolume(3);
 		m_musicaFondo.setLoop(true); // Para que se repita cuando termine
 		m_musicaFondo.play();
 	} else {
@@ -167,10 +167,9 @@ void Nivel::Actualizar(Juego &j) {
 		int xRandom, yRandom;
 		// Solo crea enemigos donde no haya pared ni el texto del tiempo
 		do {
-
 			xRandom = (rand() % (COLUMNAS - 4)) + 2;
 			yRandom = (rand() % (FILAS - 4)) + 2;    
-		} while (m_matrizDatos[yRandom][xRandom] == TILE_PARED or (xRandom < 12 && yRandom < 5));
+		} while (m_matrizDatos[yRandom][xRandom] == TILE_PARED or (xRandom < 12 and yRandom < 5));
 		
 		// Convertir coordenadas de grilla a pixeles n
 		float posX = xRandom * TAMANO_TILE;
@@ -219,7 +218,6 @@ void Nivel::Actualizar(Juego &j) {
 		for (int i = listaBolas->size() - 1; i >= 0; i--) {
 			bool bolaExploto = false;
 			sf::FloatRect cajaBola = (*listaBolas)[i].sprite.getGlobalBounds();
-			
 			for (int j = m_enemigos.size() - 1; j >= 0; j--) {
 				if (m_enemigos[j]->EstaVivo()) {
 					if (cajaBola.intersects(m_enemigos[j]->ObtenerCaja())) {
