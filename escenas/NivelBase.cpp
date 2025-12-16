@@ -208,7 +208,7 @@ void NivelBase::GenerarEnemigos(){
 		
 		float posX = x * TAMANO_TILE;
 		float posY = y * TAMANO_TILE;
-		float azar = rand()%6 + 10; // entre 10 y 15
+		float azar = rand()%11 + 10; // entre 10 y 20
 		float escala = azar /10.0f;
 		
 		Enemigo* nuevoEnemigo = new Enemigo(posX, posY, m_agil, escala);

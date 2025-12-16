@@ -22,6 +22,7 @@ private:
 	const float VELOCIDAD_MAXIMA = 2.0f;
 	sf::Vector2f m_posAnterior;
 	int m_tiempoDesvio;
+	float m_escala;
 	
 	int m_frameAtaque;    
 	int m_timerAnimacion; 

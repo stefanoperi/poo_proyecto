@@ -11,11 +11,11 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	m_velocidad = Vector2f(0.0f, 0.0f);
 	m_posAnterior = m_posicion;
 	m_tiempoDesvio = 0;
+	m_escala = escala;
 	
 	m_listoParaBorrar = false;
-	
 	// Si son mas grandes tienen mas vida
-	m_vida = 2 * escala;
+	m_vida = 2 * m_escala;
 	m_timerInvulnerabilidad = 0; 
 	m_objetivo = objetivo;
 	m_frameAtaque = 0;
@@ -29,7 +29,7 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	
 	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Idle/Idle_F.png");
 	m_sprite.setTexture(m_textura);
-	m_sprite.setScale(escala, escala);
+	m_sprite.setScale(m_escala, m_escala);
 	m_sprite.setPosition(m_posicion); 
 	
 	
@@ -39,8 +39,8 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	
 	// Configura el rect de textura para mostrar al principio el primer frame
 	m_sprite.setTextureRect(IntRect(0, 0, m_anchoFrame, m_altoFrame));
-	float anchoFrameEscalado = m_anchoFrame * escala;
-	float altoFrameEscalado = m_altoFrame * escala;
+	float anchoFrameEscalado = m_anchoFrame * m_escala;
+	float altoFrameEscalado = m_altoFrame * m_escala;
 	
 	// Ajusta el tamano de la caja
 	m_anchoCaja = m_anchoFrame * 0.32;
@@ -91,7 +91,7 @@ void Enemigo::Perseguir() {
 	
 	// Logica de persecucion
 	// Si esta cerca evita sobrecorregir la direccion, ademas solo corrige cuando el objetivo esta a su izq o arriba
-	m_velocidad = Vector2f(VELOCIDAD_MAXIMA, VELOCIDAD_MAXIMA);
+	m_velocidad = Vector2f(VELOCIDAD_MAXIMA/m_escala, VELOCIDAD_MAXIMA/m_escala);
 	
 	float deltaX = fabs(centroJugadorX - centroX);
 	if (deltaX < m_velocidad.x){
