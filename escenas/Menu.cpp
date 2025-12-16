@@ -69,7 +69,7 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 		if (e.key.code == sf::Keyboard::Return) {
 			if (m_opcionSeleccionada == 0) {
 				// Opción Jugar
-				j.PonerEscena(new Nivel4);
+				j.PonerEscena(new Nivel1);
 			}
 			if (m_opcionSeleccionada == 1) {
 				// Opción Puntajes

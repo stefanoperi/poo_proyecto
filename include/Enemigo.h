@@ -7,7 +7,7 @@
 
 class Enemigo : public Personaje {
 public:
-	Enemigo(float x, float y, Personaje* objetivo);
+	Enemigo(float x, float y, Personaje* objetivo, float escala);
 	~Enemigo() override {};
 	
 	void ProcesarEntrada() override;

@@ -6,14 +6,16 @@
 using namespace std;
 using namespace sf;
 
-Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
+Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	m_posicion = Vector2f(x, y);
 	m_velocidad = Vector2f(0.0f, 0.0f);
 	m_posAnterior = m_posicion;
 	m_tiempoDesvio = 0;
 	
 	m_listoParaBorrar = false;
-	m_vida = 2;
+	
+	// Si son mas grandes tienen mas vida
+	m_vida = 2 * escala;
 	m_timerInvulnerabilidad = 0; 
 	m_objetivo = objetivo;
 	m_frameAtaque = 0;
@@ -25,21 +27,25 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo) {
 	m_texturaMuerte = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Death/Death_F.png");
 	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Idle/Idle_F.png");
 	m_sprite.setTexture(m_textura);
-	
+	m_sprite.setScale(escala, escala);
+		
 	sf::Vector2u tamanoTextura = m_textura.getSize();
 	m_anchoFrame = tamanoTextura.x / 8;  // Divide en 8 columnas 
 	m_altoFrame = tamanoTextura.y;    // 1 sola fila
 	
 	// Configura el rect de textura para mostrar al principio el primer frame
 	m_sprite.setTextureRect(IntRect(0, 0, m_anchoFrame, m_altoFrame));
+	float anchoFrameEscalado = m_anchoFrame * escala;
+	float altoFrameEscalado = m_altoFrame * escala;
 	
 	// Ajusta el tamano de la caja
 	m_anchoCaja = m_anchoFrame * 0.32;
 	m_altoCaja = m_altoFrame * 0.45;
 	
+	
 	// Centra la caja calculando el espacio libre
-	m_offsetX = (m_anchoFrame - m_anchoCaja) /2; 
-	m_offsetY = (m_altoFrame - m_altoCaja) /2;
+	m_offsetX =  (anchoFrameEscalado - m_anchoCaja) /2; 
+	m_offsetY = (altoFrameEscalado - m_altoCaja) /2;
 	m_cajaColision = FloatRect(m_posicion.x + m_offsetX, m_posicion.y + m_offsetY, m_anchoCaja, m_altoCaja);
 }
 

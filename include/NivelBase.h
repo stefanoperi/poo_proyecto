@@ -14,10 +14,6 @@ protected:
 	std::vector<std::vector<int>> m_matrizDatos;
 	const int FILAS;
 	const int COLUMNAS;
-	
-	int m_idNivel;           
-	int m_enemigosEliminados; 
-	int m_metaEnemigos; 
 private:
 	Agil* m_agil;
 	std::vector<Personaje*> m_enemigos;
@@ -25,10 +21,18 @@ private:
 	
 	const int TAMANO_TILE;
 	
+	int m_idNivel; 
+	static int m_nivelesJugados;
+	int m_enemigosEliminados; 
+	int m_metaEnemigos; 
+	
 	sf::Text m_textoTiempo;     
 	sf::Clock m_relojFrame;    
-	float m_tiempoJuego;
+	static float m_tiempoJuego;
+	
 	sf::Music m_musicaFondo;
+	
+	sf::Text m_textoEnemigosRestantes;
 	
 	bool m_estaPausado;            
 	bool m_escPresionadoPrevio;    

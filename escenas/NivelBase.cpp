@@ -15,6 +15,8 @@
 #include <iomanip>
 using namespace std;
 using namespace sf;
+float NivelBase::m_tiempoJuego = 0.0f;
+int NivelBase::m_nivelesJugados = 0; 
 
 NivelBase::NivelBase(int id): 
 	TAMANO_TILE(18), 
@@ -22,8 +24,7 @@ NivelBase::NivelBase(int id):
 	COLUMNAS(107),
 	m_contadorTiempo(0),
 	m_idNivel(id),       
-	m_enemigosEliminados(0),
-	m_metaEnemigos(10 + id * 5) 
+	m_enemigosEliminados(0)
 {
 	// Soundtrack de fondo
 	vector<string> listaCanciones = {"ost1.wav", "ost2.wav", "ost3.wav" };
@@ -31,18 +32,28 @@ NivelBase::NivelBase(int id):
 	int indiceRandom = rand() % cantidadDeCanciones;
 	if (m_musicaFondo.openFromFile("recursos/sonidos/nivel/" + listaCanciones[indiceRandom])) {
 		m_musicaFondo.setVolume(3);
-		m_musicaFondo.setLoop(true); // Para que se repita cuando termine
+		m_musicaFondo.setLoop(true); 
 		m_musicaFondo.play();
 	} else {
 		std::cerr << "No se pudo cargar la musica de fondo." << std::endl;
 	}
 	
+	if (m_idNivel == 0) {
+		m_tiempoJuego = 0.0f;
+		m_nivelesJugados = 0;
+	}
+	m_metaEnemigos = 5 + (m_nivelesJugados * 3);
 	// Texto de tiempo transcurrido
-	m_tiempoJuego = 0.0f; 
 	m_textoTiempo.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
 	m_textoTiempo.setCharacterSize(30);
 	m_textoTiempo.setFillColor(Color::White);
-	m_textoTiempo.setPosition(15, 10); 
+	m_textoTiempo.setPosition(720, 10); 
+	
+	// Texto de enemigos restantes
+	m_textoEnemigosRestantes.setFont(GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf"));
+	m_textoEnemigosRestantes.setCharacterSize(30);
+	m_textoEnemigosRestantes.setFillColor(Color::Red);
+	m_textoEnemigosRestantes.setPosition(950, 10); 
 	
 	// Textos de pausa 
 	m_estaPausado = false;
@@ -132,13 +143,14 @@ void NivelBase::Actualizar(Juego &j) {
 		
 		NivelBase* nuevoNivel = nullptr;
 		switch(siguienteNivel) {
-		case 0: nuevoNivel = new Nivel1(); break;
-		case 1: nuevoNivel = new Nivel2(); break;
-		case 2: nuevoNivel = new Nivel3(); break;
-		case 3: nuevoNivel = new Nivel4(); break;
+			case 0: nuevoNivel = new Nivel2(); break;
+			case 1: nuevoNivel = new Nivel2(); break;
+			case 2: nuevoNivel = new Nivel3(); break;
+			case 3: nuevoNivel = new Nivel4(); break;
 		}
 		
 		j.PonerEscena(nuevoNivel);
+		m_nivelesJugados++;
 		return;
 	}
 	
@@ -154,28 +166,53 @@ void NivelBase::ActualizarUI(float dt) {
 	std::stringstream ss;
 	ss << "Tiempo: " << (int)m_tiempoJuego << "s"; 
 	m_textoTiempo.setString(ss.str());
+	string s = "Enemigos restantes: " +to_string(m_metaEnemigos - m_enemigosEliminados);
+	m_textoEnemigosRestantes.setString(s);
 }
 void NivelBase::GenerarEnemigos(){
 	// Aparicion de enemigos progresiva
 	m_contadorTiempo++;
-	int demoraSpawn = 130 - (int)m_tiempoJuego;
+	int demoraSpawn = 110 - (int)m_tiempoJuego;
 	
-	if (demoraSpawn < 40) {
-		demoraSpawn = 40;
+	if (demoraSpawn < 20) {
+		demoraSpawn = 20;
 	}
+	bool enZonaUI, tocaPared;
+	int x,y;
+	const int MARGEN = 3;
 	if (m_contadorTiempo > demoraSpawn) {
-		int xRandom, yRandom;
 		// Solo crea enemigos donde no haya pared ni el texto del tiempo
 		do {
-			xRandom = (rand() % (COLUMNAS - 4)) + 2;
-			yRandom = (rand() % (FILAS - 4)) + 2;    
-		} while (m_matrizDatos[yRandom][xRandom] == TILE_PARED or (xRandom < 12 && yRandom < 5));
+			tocaPared = false;
+			enZonaUI = false;
+			x = (rand() % (COLUMNAS - MARGEN * 2)) +MARGEN; // +3 para el borde izq, -6 para el total
+			y = (rand() % (FILAS - MARGEN * 2)) + MARGEN;
+			
+			enZonaUI = (x < 15 and y < 8); 
+			// Si encuentra cualquier pared en el cuadrado 3x3
+			for(int i = -1; i <= 1; i++) {
+				for(int j = -1; j <= 1; j++) { 
+					if (y+i >= 0 and y+i < FILAS and x+j >= 0 and x+j < COLUMNAS){
+						if (m_matrizDatos[y + i][x + j] == TILE_PARED) {
+							tocaPared = true;
+							break; 
+						}
+					}
+				}
+				if (tocaPared) break;
+			}
+	
+		} while (tocaPared or enZonaUI);
 		
-		// Convertir coordenadas de grilla a pixeles n
-		float posX = xRandom * TAMANO_TILE;
-		float posY = yRandom * TAMANO_TILE;
+		// Convertir coordenadas de grilla a pixeles 
 		
-		Enemigo* nuevoEnemigo = new Enemigo(posX, posY, m_agil);
+		float posX = x * TAMANO_TILE;
+		float posY = y * TAMANO_TILE;
+		float azar = rand()%6 + 10; // entre 10 y 15
+		float escala = azar /10.0f;
+		
+		Enemigo* nuevoEnemigo = new Enemigo(posX, posY, m_agil, escala);
+		nuevoEnemigo->GuardarPosicion();
 		m_enemigos.push_back(nuevoEnemigo);
 		m_contadorTiempo = 0;
 	}
@@ -210,6 +247,7 @@ void NivelBase::ActualizarFisicas() {
 		for (size_t j = i + 1; j < m_enemigos.size(); j++) {
 			if (m_enemigos[i]->EstaVivo() and m_enemigos[j]->EstaVivo()) {
 				m_enemigos[i]->ResolverColision(*m_enemigos[j]);
+			
 			}
 		}
 	}	
@@ -300,6 +338,8 @@ void NivelBase::ProcesarEventos(Juego &j, Event &e) {
 void NivelBase::Dibujar(RenderWindow &ventana) {
 	ventana.clear(Color(70, 125, 0));  // Verde pasto
 	ventana.draw(m_textoTiempo);
+	ventana.draw(m_textoEnemigosRestantes);
+	
 	// Solo dibujar paredes
 	for (int y = 0; y < m_matrizDatos.size(); y++) {
 		for (int x = 0; x < m_matrizDatos[y].size(); x++) {
@@ -315,6 +355,7 @@ void NivelBase::Dibujar(RenderWindow &ventana) {
 	for (size_t i = 0; i < m_enemigos.size(); i++) {
 		m_enemigos[i]->Dibujar(ventana);
 	}
+	
 	
 	if (m_estaPausado and m_juegoTerminado == false) {
 		// 	Centra y Dibuja el titulo
