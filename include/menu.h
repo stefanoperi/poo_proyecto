@@ -15,7 +15,6 @@ private:
 	sf::Text m_titulo; 
 	sf::Text m_txtJugar;    
 	sf::Text m_txtPuntajes; 
-	// Variable de ESTADO: 0 = Jugar, 1 = Puntajes
 	int m_opcionSeleccionada; 
 };
 

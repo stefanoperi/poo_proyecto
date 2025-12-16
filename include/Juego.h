@@ -13,6 +13,7 @@ public:
 	void PonerEscena(Escena *nueva_escena);
 	
 private:
+	
 	sf::RenderWindow m_ventana;
 	Escena *m_escena;
 	Escena *m_nueva_escena = nullptr;

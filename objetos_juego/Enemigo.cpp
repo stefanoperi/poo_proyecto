@@ -129,7 +129,7 @@ void Enemigo::RecibirAtaque(int cantidad) {
 	if (m_vida <= 0) {
 		m_estaMuriendo = true; // Activa el estado de muerte
 		m_golpeConectado = true; // Evita que siga haciendo daño si estaba atacando
-
+		m_listoParaBorrar = true;
 		m_sprite.setTexture(m_texturaMuerte);
 		m_sprite.setTextureRect(sf::IntRect(0, 0, m_anchoFrame, m_altoFrame));
 		m_sprite.setColor(sf::Color::White);

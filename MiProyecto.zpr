@@ -19,7 +19,7 @@ path_char=\
 path=escenas\Menu.cpp
 cursor=0:0
 [source]
-path=escenas\Nivel.cpp
+path=escenas\NivelBase.cpp
 cursor=0:0
 [source]
 path=fuentes\GestorRecursos.cpp
@@ -32,6 +32,9 @@ path=fuentes\main.cpp
 cursor=0:0
 [source]
 path=fuentes\ManejadorPuntajes.cpp
+cursor=0:0
+[source]
+path=fuentes\Niveles.cpp
 cursor=0:0
 [source]
 path=fuentes\PantallaPuntajes.cpp
@@ -67,7 +70,10 @@ cursor=0:0
 path=include\menu.h
 cursor=0:0
 [header]
-path=include\Nivel.h
+path=include\NivelBase.h
+cursor=0:0
+[header]
+path=include\Niveles.h
 cursor=0:0
 [header]
 path=include\PantallaPuntajes.h
@@ -119,6 +125,12 @@ path=Debug_Win32\MyProject.exe
 cursor=0:0
 [other]
 path=Debug_Win32\Nivel.o
+cursor=0:0
+[other]
+path=Debug_Win32\NivelBase.o
+cursor=0:0
+[other]
+path=Debug_Win32\Niveles.o
 cursor=0:0
 [other]
 path=Debug_Win32\PantallaPuntajes.o

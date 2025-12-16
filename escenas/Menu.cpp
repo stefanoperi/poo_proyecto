@@ -1,9 +1,10 @@
 #include "Menu.h"
 #include "Juego.h"
 #include "GestorRecursos.h"
-#include "Nivel.h"
+#include "Niveles.h"
 #include <iostream>
 #include "PantallaPuntajes.h"
+#include "NivelBase.h"
 
 using namespace sf;
 
@@ -68,7 +69,7 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 		if (e.key.code == sf::Keyboard::Return) {
 			if (m_opcionSeleccionada == 0) {
 				// Opción Jugar
-				j.PonerEscena(new Nivel());
+				j.PonerEscena(new Nivel4);
 			}
 			if (m_opcionSeleccionada == 1) {
 				// Opción Puntajes
@@ -77,6 +78,7 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 		}
 	}
 }
+	
 
 void Menu::Dibujar(RenderWindow &ventana){
 	ventana.clear(sf::Color::Black);
@@ -98,5 +100,4 @@ void Menu::Dibujar(RenderWindow &ventana){
 	m_txtPuntajes.setPosition((ancho - rPuntajes.width)/2.0f, alto * 0.65f); 
 	ventana.draw(m_txtPuntajes);
 	ventana.display();
-	
 }
