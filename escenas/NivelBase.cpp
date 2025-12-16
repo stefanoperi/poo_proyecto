@@ -212,7 +212,6 @@ void NivelBase::GenerarEnemigos(){
 		float escala = azar /10.0f;
 		
 		Enemigo* nuevoEnemigo = new Enemigo(posX, posY, m_agil, escala);
-		nuevoEnemigo->GuardarPosicion();
 		m_enemigos.push_back(nuevoEnemigo);
 		m_contadorTiempo = 0;
 	}
@@ -233,7 +232,7 @@ void NivelBase::ActualizarFisicas() {
 		m_enemigos[i]->GuardarPosicion();
 		m_enemigos[i]->Actualizar();
 		if (HayColision(m_enemigos[i]->ObtenerCaja())) {
-			m_enemigos[i]->RestaurarPosicion(); 
+			m_enemigos[i]->RestaurarPosicion();
 		}
 	}
 	// Colisiones entre los enemigos y el jugador
@@ -247,7 +246,7 @@ void NivelBase::ActualizarFisicas() {
 		for (size_t j = i + 1; j < m_enemigos.size(); j++) {
 			if (m_enemigos[i]->EstaVivo() and m_enemigos[j]->EstaVivo()) {
 				m_enemigos[i]->ResolverColision(*m_enemigos[j]);
-			
+	
 			}
 		}
 	}	

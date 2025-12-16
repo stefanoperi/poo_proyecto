@@ -25,10 +25,14 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	m_frameMuerte = 0; 
 	m_timerMuerte = 0;
 	m_texturaMuerte = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Death/Death_F.png");
+	m_estaMuriendo = false;
+	
 	m_textura = GestorRecursos::ObtenerTextura("recursos/texturas/Skeleton/Idle/Idle_F.png");
 	m_sprite.setTexture(m_textura);
 	m_sprite.setScale(escala, escala);
-		
+	m_sprite.setPosition(m_posicion); 
+	
+	
 	sf::Vector2u tamanoTextura = m_textura.getSize();
 	m_anchoFrame = tamanoTextura.x / 8;  // Divide en 8 columnas 
 	m_altoFrame = tamanoTextura.y;    // 1 sola fila
@@ -47,6 +51,7 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	m_offsetX =  (anchoFrameEscalado - m_anchoCaja) /2; 
 	m_offsetY = (altoFrameEscalado - m_altoCaja) /2;
 	m_cajaColision = FloatRect(m_posicion.x + m_offsetX, m_posicion.y + m_offsetY, m_anchoCaja, m_altoCaja);
+	GuardarPosicion();
 }
 
 void Enemigo::ProcesarEntrada() {}
