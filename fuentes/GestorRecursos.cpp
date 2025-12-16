@@ -1,6 +1,6 @@
 #include "GestorRecursos.h"
 #include <iostream>
-///Como la clase no debe tener constructor, defino las variables estaticas 
+// Variables estaticas
 std::map<std::string, sf::Texture> GestorRecursos::s_texturas;
 std::map<std::string, sf::Font> GestorRecursos::s_fuentes;
 std::map<std::string, sf::SoundBuffer> GestorRecursos::s_sonidos;

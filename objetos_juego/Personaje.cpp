@@ -16,7 +16,7 @@ void Personaje::RestaurarPosicion() {
 	m_cajaColision.top = m_posicion.y + m_offsetY; 
 }
 bool Personaje::EstaVivo() {
-	return !m_listoParaBorrar;
+	return m_vida>0;
 }
 bool Personaje::ResolverColision(Personaje &otro) {
 	sf::FloatRect r1 = this->ObtenerCaja();
@@ -36,28 +36,28 @@ bool Personaje::ResolverColision(Personaje &otro) {
 	float deltaX = r1CentroX - r2CentroX;
 	float deltaY = r1CentroY - r2CentroY;
 	
-	// Suma de las mitades de los anchos/altos (Distancia mínima sin colisión)
+	// Distancia mínima sin colisión
 	float minDistX = (r1.width / 2.0f) + (r2.width / 2.0f);
 	float minDistY = (r1.height / 2.0f) + (r2.height / 2.0f);
 	
 	// Cantidad de interseccion (cuánto se metió uno dentro del otro)
-	float intersectX = minDistX - std::abs(deltaX);
-	float intersectY = minDistY - std::abs(deltaY);
+	float interseccX = minDistX - std::abs(deltaX);
+	float interseccY = minDistY - std::abs(deltaY);
 	 
 	// Empuja en el eje donde haya menos intersección 
-	if (intersectX < intersectY) {
+	if (interseccX < interseccY) {
 		// El choque es horizontal 
 		if (deltaX > 0.0f) {
-			m_posicion.x += intersectX;
+			m_posicion.x += interseccX;
 		} else {
-			m_posicion.x -= intersectX;
+			m_posicion.x -= interseccX;
 		}
 	} else {
 		// El choque es vertical 
 		if (deltaY > 0.0f) {
-			m_posicion.y += intersectY;
+			m_posicion.y += interseccY;
 		} else {
-			m_posicion.y -= intersectY;
+			m_posicion.y -= interseccY;
 		}
 	}
 	
@@ -68,6 +68,4 @@ bool Personaje::ResolverColision(Personaje &otro) {
 	
 	return true; // Hubo choque y se resolvió
 }
-bool Personaje::EstaListoParaBorrar() {
-	return m_listoParaBorrar;
-}
+

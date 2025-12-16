@@ -2,7 +2,7 @@
 #define NIVELES_H
 #include "NivelBase.h"
 
-// Nivel 1: Pilares verticales para cubrirse
+// Distintos mapas para cada nivel
 class Nivel1 : public NivelBase {
 protected:
 	void GenerarMapa() override;
@@ -12,7 +12,6 @@ public:
 	}
 };
 
-// Nivel 2: Cruz grande que divide el mapa
 class Nivel2 : public NivelBase {
 protected:
 	void GenerarMapa() override;
@@ -22,7 +21,6 @@ public:
 	}
 };
 
-// Nivel 3: Patrón de tablero de ajedrez
 class Nivel3 : public NivelBase {
 protected:
 	void GenerarMapa() override;
@@ -32,7 +30,6 @@ public:
 	}
 };
 
-// Nivel 4: Escombros aleatorios
 class Nivel4 : public NivelBase {
 protected:
 	void GenerarMapa() override;

@@ -13,7 +13,6 @@ Enemigo::Enemigo(float x, float y, Personaje* objetivo, float escala) {
 	m_tiempoDesvio = 0;
 	m_escala = escala;
 	
-	m_listoParaBorrar = false;
 	// Si son mas grandes tienen mas vida
 	m_vida = 2 * m_escala;
 	m_timerInvulnerabilidad = 0; 
@@ -140,7 +139,6 @@ void Enemigo::RecibirAtaque(int cantidad) {
 	if (m_vida <= 0) {
 		m_estaMuriendo = true; // Activa el estado de muerte
 		m_golpeConectado = true; // Evita que siga haciendo daño si estaba atacando
-		m_listoParaBorrar = true;
 		m_sprite.setTexture(m_texturaMuerte);
 		m_sprite.setTextureRect(sf::IntRect(0, 0, m_anchoFrame, m_altoFrame));
 		m_sprite.setColor(sf::Color::White);
@@ -232,12 +230,6 @@ void Enemigo::Actualizar() {
 		if (m_timerMuerte > 8) {
 			m_timerMuerte = 0;
 			m_frameMuerte++;
-			
-			// Al frame 7, la animación terminó
-			if (m_frameMuerte >= 7) {
-				m_listoParaBorrar = true; 
-				return; 
-			}
 			m_sprite.setTextureRect(sf::IntRect(m_frameMuerte * m_anchoFrame, 0, m_anchoFrame, m_altoFrame));
 		}
 		return; // Si se está muriendo, no ejecuta Perseguir() ni Atacar()

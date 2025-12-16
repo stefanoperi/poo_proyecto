@@ -2,7 +2,6 @@
 #define TIPOSDETILE_H
 
 // Tiles básicos
-const int TILE_VALLA = 81;
 const int TILE_PARED = 126;
 
 

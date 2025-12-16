@@ -3,10 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-struct BolaEnergia {
-	sf::Sprite sprite;
-	sf::Vector2f velocidad;
-};
+
 class Personaje {
 public:
 	virtual ~Personaje(){}; 
@@ -17,13 +14,11 @@ public:
 	virtual void Dibujar(sf::RenderWindow &ventana) = 0; 
 	virtual void RecibirAtaque(int cantidad) = 0;
 	
-	// Metodos virtuales no puros
-	virtual sf::FloatRect ObtenerCaja();
-	virtual void GuardarPosicion();
-	virtual void RestaurarPosicion();
-	virtual bool EstaVivo();
-	virtual bool EstaListoParaBorrar();
-	
+	sf::FloatRect ObtenerCaja();
+	void GuardarPosicion();
+	void RestaurarPosicion();
+	bool EstaVivo();
+
 	bool ResolverColision(Personaje &otro);
 
 protected:
@@ -34,7 +29,6 @@ protected:
 	sf::Texture m_textura; 
 	sf::FloatRect m_cajaColision; 
 	int m_vida;
-	bool m_listoParaBorrar;
 	int m_timerInvulnerabilidad; //Para que no reciba daño en cada frame consecutivo
 	
 	// Tamano de cada estado del personaje

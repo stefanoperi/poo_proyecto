@@ -11,7 +11,7 @@ using namespace sf;
 Menu::Menu() {
 	m_fuente = GestorRecursos::ObtenerFuente("recursos/fuentes_texto/ScienceGothic.ttf");
 	
-	// Empezamos parados en la opción 0 (Jugar)
+	// Empieza en la opción 0 (Jugar)
 	m_opcionSeleccionada = 0;
 
 	m_titulo.setFont(m_fuente);
@@ -63,7 +63,7 @@ void Menu::ProcesarEventos(Juego &j, sf::Event &e) {
 		
 		if (e.key.code == sf::Keyboard::Up) {
 			m_opcionSeleccionada--; // Subimos
-			if (m_opcionSeleccionada < 0) m_opcionSeleccionada = 1; // Si subE de la primera, vamos a la última
+			if (m_opcionSeleccionada < 0) m_opcionSeleccionada = 1; // Si sube de la primera, vamos a la última
 		}
 		
 		if (e.key.code == sf::Keyboard::Return) {

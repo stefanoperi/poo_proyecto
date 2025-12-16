@@ -9,7 +9,6 @@ using namespace sf;
 const int COLUMNAS_TOTALES_GRILLA = 19; 
 
 Agil::Agil(float x, float y) {
-	m_listoParaBorrar = false;
 	m_vida = 5;                  
 	m_timerInvulnerabilidad = 0; 
 	
@@ -73,7 +72,7 @@ void Agil::ProcesarEntrada() {
 		m_enMovimiento = true;
 	}
 	
-	if (Keyboard::isKeyPressed(Keyboard::Space)  and m_timerCooldown > 30) {
+	if (Keyboard::isKeyPressed(Keyboard::Space) and m_timerCooldown > 30) {
 		m_atacando = true;
 		m_frameAtaque = 0;    
 		m_timerAnimacion = 0; 
@@ -134,7 +133,15 @@ void Agil::Atacar() {
 	}
 }
 std::vector<BolaEnergia>* Agil::ObtenerBolas(){ return &m_bolas; }
-
+void Agil::Mover() {
+	m_timerAnimacion++;
+	if (m_timerAnimacion > 3) {
+		m_timerAnimacion = 0;
+		m_frameCaminar++;
+		// Reinicia la animacion
+		if (m_frameCaminar >= 12) m_frameCaminar = 0; 
+	}
+}
 void Agil::Actualizar() {
 	if (m_timerInvulnerabilidad > 0) {
 		m_timerInvulnerabilidad--;
@@ -170,7 +177,7 @@ void Agil::Actualizar() {
 		int altoLocal = m_texturaAtacar.getSize().y / 4;
 		Atacar(); 
 		
-		m_sprite.setTextureRect(IntRect(m_frameAtaque * anchoLocal,filaReal * altoLocal,   anchoLocal, altoLocal	));
+		m_sprite.setTextureRect(IntRect(m_frameAtaque * anchoLocal,filaReal * altoLocal,   anchoLocal, altoLocal));
 		
 		// Guarda medidas correctas
 		m_anchoFrame = anchoLocal;
@@ -180,14 +187,8 @@ void Agil::Actualizar() {
 		m_sprite.setTexture(m_texturaCorrer);
 		int anchoLocal = m_texturaCorrer.getSize().x / COLUMNAS_TOTALES_GRILLA; 
 		int altoLocal = m_texturaCorrer.getSize().y / 4;
-	
-		m_timerAnimacion++;
-		if (m_timerAnimacion > 3) {
-			m_timerAnimacion = 0;
-			m_frameCaminar++;
-			// Solo llegamos hasta el 12, aunque la imagen tenga 19 huecos
-			if (m_frameCaminar >= 12) m_frameCaminar = 0; 
-		}
+		Mover();
+		
 		// Recorta el sprite
 		m_sprite.setTextureRect(IntRect(m_frameCaminar * anchoLocal, filaReal * altoLocal,   anchoLocal, altoLocal));
 		
@@ -212,9 +213,6 @@ void Agil::RecibirAtaque(int cantidad) {
 	
 	// Activa invulnerabilidad (60 frames = 1 segundo aprox)
 	m_timerInvulnerabilidad = 60;
-	if (m_vida <= 0) {
-		m_listoParaBorrar = true;
-	}
 }
 void Agil::Dibujar(RenderWindow &ventana) {
 	// Dibuja las bolas de energia

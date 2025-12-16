@@ -3,6 +3,10 @@
 
 #include "Personaje.h"
 #include <SFML/Graphics.hpp>
+struct BolaEnergia {
+	sf::Sprite sprite;
+	sf::Vector2f velocidad;
+};
 
 class Agil : public Personaje {
 public:
@@ -17,6 +21,7 @@ public:
 	// Métodos de combate
 	sf::FloatRect ObtenerCajaAtaque();
 	void Atacar();
+	void Mover();
 	int ObtenerVida();
 	std::vector<BolaEnergia>* ObtenerBolas();
 private:

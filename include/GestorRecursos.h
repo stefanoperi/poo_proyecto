@@ -8,8 +8,6 @@
 #include <string>
 
 
-/// El gestor de recursos al ser una clase estatica permite que las texturas (imagenes) vivan todo el programa
-/// Esto evita bugs ya que impide que los sprites apunten a texturas borradas accidentalmente
 class GestorRecursos {
 public:
 	// Devuelve una textura cargada, cargándola si aún no existe
@@ -18,8 +16,7 @@ public:
 	// Devuelve una fuente cargada
 	static sf::Font& ObtenerFuente(const std::string& archivo);
 private:
-	/// Al poner el constructor en private impide que se construya (no es instanciable) asi no hay q pasarlo siempre como parametro
-	GestorRecursos(){} 
+	GestorRecursos(){} // No es instanciable
 	static std::map<std::string, sf::Texture> s_texturas;
 	static std::map<std::string, sf::Font> s_fuentes;
 	static std::map<std::string, sf::SoundBuffer> s_sonidos;
